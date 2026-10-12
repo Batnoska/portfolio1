@@ -1,296 +1,368 @@
-<!-- 
-  Hello 😊.
-
-  This template is designed and developed by Nisar Hassan Naqvi
-  for anyone to use for free or customize the way they like.
-
-  Github Repo: https://github.com/nisarhassan12/portfolio-template/
-  My Website: https://nisar.dev
-
-  For business & inquires, contact me => syednisarhassan12@gmail.com
--->
-
-<!--
-  Follow the instructions written in comments to create your stunning portfolio
--->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
-
-  <!-- Put your site title here -->
-  <title>
-    Santiago Batnoska | Game Developer
-  </title>
-
-  <meta name="description" content="Add small description of yourslef.">
-  Santiago Batnoska, Junior, Game Developer, Unreal Engine, Unity, C++, C#, Blueprints, Game Design, Indie Games, Open For Work
-  <meta name="keywords" content="Put your name, skills and some coding keywords" />
+  <title>Santiago Batnoska — Game Developer</title>
+  <meta name="description" content="Santiago Batnoska — Game Developer. Gameplay, tools and interactive experiences in Unity (C#) and Unreal Engine 5 (C++)." />
+  <meta name="keywords" content="Santiago Batnoska, Game Developer, Unity, Unreal Engine 5, C#, C++, Blueprints, Gameplay Programmer, Tools, UI Toolkit, Argentina" />
+  <meta name="author" content="Santiago Batnoska" />
+  <meta name="theme-color" content="#09090b" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Santiago Batnoska — Game Developer" />
+  <meta property="og:description" content="Gameplay, tools and interactive experiences in Unity and Unreal Engine." />
+  <meta property="og:image" content="./images/work/burn-this-city.webp" />
+  <link rel="icon" type="image/png" href="./images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="index.css" />
 </head>
 
-<body>
+<body class="is-loading">
+  <a class="skip-link" href="#work" data-i18n="skip">Saltar al contenido</a>
 
-  <!-- ***** Header ***** -->
-
-  <header class="header" role="banner" id="top">
-    <div class="row">
-      <nav class="nav" role="navigation">
-        <ul class="nav__items">
-          <li class="nav__item"><a href="#work" class="nav__link">Work</a></li>
-          <!-- <li class="nav__item"><a href="#clients" class="nav__link">Clients</a></li> -->
-          <li class="nav__item">
-            <a href="#about" class="nav__link">About</a>
-          </li>
-          <li class="nav__item">
-            <a href="#contact" class="nav__link">Contact</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    <div class="header__text-box row">
-      <div class="header__text">
-        <h1 class="heading-primary">
-          <!-- Replace the following name with your name -->
-          <span>Santiago Batnoska</span>
-        </h1>
-        <!-- Put a small paragraph about yourself -->
-        <p>Argentine Game Developer</p>
-        <a href="#contact" class="btn btn--pink">Get in touch</a>
+  <!-- ===== Boot sequence ===== -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <div class="preloader__top">
+        <span class="mono">SB_PORTFOLIO.EXE</span>
+        <span class="mono preloader__build">BUILD 2026.1</span>
       </div>
+      <ul class="preloader__log mono">
+        <li data-i18n="boot1">Inicializando motor…</li>
+        <li data-i18n="boot2">Compilando shaders…</li>
+        <li data-i18n="boot3">Cargando niveles…</li>
+        <li data-i18n="boot4">Encendiendo las brasas…</li>
+      </ul>
+      <div class="preloader__bottom">
+        <div class="preloader__count"><span class="preloader__num">00</span><span class="preloader__pct">%</span></div>
+        <div class="preloader__bar"><span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"><span class="cursor__label"></span></span></div>
+  <div class="toast mono" role="status" aria-live="polite"></div>
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <a href="#top" class="logo" aria-label="Santiago Batnoska">
+      <span class="logo__mark">SB</span>
+      <span class="logo__name">Santiago Batnoska</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#work" class="nav__link"><span class="mono">01</span><span data-i18n="navWork" data-scramble>Proyectos</span></a>
+      <a href="#tools" class="nav__link"><span class="mono">02</span><span data-i18n="navTools" data-scramble>Herramientas</span></a>
+      <a href="#about" class="nav__link"><span class="mono">03</span><span data-i18n="navAbout" data-scramble>Sobre mí</span></a>
+      <a href="#contact" class="nav__link"><span class="mono">04</span><span data-i18n="navContact" data-scramble>Contacto</span></a>
+    </nav>
+    <div class="header__actions">
+      <button class="lang" type="button" aria-label="Cambiar idioma / Change language">
+        <span class="lang__opt" data-lang="es">ES</span><span class="lang__sep">/</span><span class="lang__opt" data-lang="en">EN</span>
+      </button>
+      <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
     </div>
   </header>
 
-  <main role="main">
+  <div class="mobile-menu">
+    <a href="#work"><span class="mono">01</span><span data-i18n="navWork">Proyectos</span></a>
+    <a href="#tools"><span class="mono">02</span><span data-i18n="navTools">Herramientas</span></a>
+    <a href="#about"><span class="mono">03</span><span data-i18n="navAbout">Sobre mí</span></a>
+    <a href="#contact"><span class="mono">04</span><span data-i18n="navContact">Contacto</span></a>
+  </div>
 
-    <!-- ***** Work ***** -->
+  <main id="top">
 
-    <section class="work" id="work">
-      <div class="row">
-        <h2>My Work</h2>
-        <div class="work__boxes">
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <canvas class="hero__embers" aria-hidden="true"></canvas>
+      <div class="hero__vignette" aria-hidden="true"></div>
+      <div class="hud" aria-hidden="true">
+        <span class="hud__corner hud__corner--tl"></span><span class="hud__corner hud__corner--tr"></span>
+        <span class="hud__corner hud__corner--bl"></span><span class="hud__corner hud__corner--br"></span>
+        <span class="hud__readout mono">X <b class="hud__x">0000</b> · Y <b class="hud__y">0000</b></span>
+        <span class="hud__fps mono"><b class="hud__fps-num">60</b> FPS</span>
+      </div>
 
-          <!-- Each div with the work__box class is a project. -->
+      <div class="hero__content">
+        <p class="hero__kicker mono reveal-up"><span class="dot dot--live"></span><span data-i18n="heroKicker">Game Developer · Buenos Aires, AR</span></p>
+        <h1 class="hero__title" aria-label="Santiago Batnoska" data-fit>
+          <span class="hero__line"><span class="hero__word" data-split>Santiago</span></span>
+          <span class="hero__line"><span class="hero__word hero__word--outline" data-split>Batnoska</span></span>
+        </h1>
+        <div class="hero__bottom">
+          <p class="hero__lead reveal-up" data-i18n="heroLead">Programo sistemas de gameplay, herramientas y experiencias interactivas en Unity y Unreal Engine.</p>
+          <div class="hero__role reveal-up">
+            <span class="mono hero__role-label" data-i18n="heroNow">Enfoque</span>
+            <span class="hero__role-text"><span class="typer"></span><span class="typer__caret"></span></span>
+          </div>
+        </div>
+        <div class="hero__cta reveal-up">
+          <a href="#work" class="btn btn--solid" data-magnetic><span data-i18n="ctaWork">Ver proyectos</span><span class="btn__arrow">→</span></a>
+          <a href="#contact" class="btn btn--ghost" data-magnetic><span data-i18n="ctaContact">Hablemos</span></a>
+        </div>
+      </div>
 
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Burn This City</h3>
-              <p>
-                A Side-Scrolling Narrative Adventure Game in Unity 2D, set in a
-                dystopian steampunk city.
-              </p>
-              <ul class="work__list">
-                <li>Dialogue System</li>
-                <li>Multiple Endings</li>
-                <li>Strong Narrative</li>
-                <li>Immersive Ambience</li>
-                <li>Inventory Management</li>
-                <li>Stats Progression</li>
-              </ul>
+      <a href="#work" class="scroll-cue mono" aria-label="Scroll"><span data-i18n="scroll">Scroll</span><span class="scroll-cue__line"></span></a>
+    </section>
 
-              <div class="work__links">
-                <a href="https://cur4.itch.io/burn-this-city" target="_blank" class="link__text">
-                  View Site <span>&rarr;</span>
-                </a>
-                <a href="https://github.com/eminavoid/Burn-This-City" title="View Source Code" target="_blank">
-                  <img src="./images/github.svg" class="work__code" alt="GitHub">
-                </a>
-              </div>
+    <!-- ===== Marquee ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Unity</span><i>✦</i><span>Unreal Engine 5</span><i>✦</i><span>C#</span><i>✦</i><span>C++</span><i>✦</i><span>Blueprints</span><i>✦</i><span>Gameplay Systems</span><i>✦</i><span>UI Toolkit</span><i>✦</i><span>Editor Tools</span><i>✦</i><span>Design Patterns</span><i>✦</i>
+        <span>Unity</span><i>✦</i><span>Unreal Engine 5</span><i>✦</i><span>C#</span><i>✦</i><span>C++</span><i>✦</i><span>Blueprints</span><i>✦</i><span>Gameplay Systems</span><i>✦</i><span>UI Toolkit</span><i>✦</i><span>Editor Tools</span><i>✦</i><span>Design Patterns</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ===== Work ===== -->
+    <section class="section work" id="work">
+      <div class="section__head">
+        <span class="section__index mono">01</span>
+        <h2 class="section__title" data-split data-i18n="workTitle">Proyectos seleccionados</h2>
+        <p class="section__sub" data-reveal data-i18n="workSub">Juegos en los que programé, lideré y di forma a sus sistemas. Elegí un nivel.</p>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter" data-reveal>
+        <button class="chip is-active" type="button" data-filter="all"><span data-i18n="filterAll">Todos</span><sup class="mono">4</sup></button>
+        <button class="chip" type="button" data-filter="unity">Unity<sup class="mono">2</sup></button>
+        <button class="chip" type="button" data-filter="unreal">Unreal<sup class="mono">2</sup></button>
+      </div>
+
+      <div class="projects">
+        <article class="project" data-engine="unity" data-reveal>
+          <a class="project__media" href="https://cur4.itch.io/burn-this-city" target="_blank" rel="noopener" data-tilt data-cursor="play">
+            <img src="./images/work/burn-this-city.webp" alt="Burn This City" loading="lazy" width="951" height="526" />
+            <span class="project__glare"></span>
+            <span class="project__level mono">LVL 01</span>
+          </a>
+          <div class="project__info">
+            <div class="project__meta mono"><span class="tag tag--unity">Unity 2D</span><span class="project__rule"></span><span data-i18n="genre1">Aventura narrativa</span></div>
+            <h3 class="project__title">Burn This City</h3>
+            <p class="project__desc" data-i18n="desc1">Aventura narrativa side-scroller ambientada en una ciudad steampunk distópica, donde cada decisión pesa.</p>
+            <ul class="project__tags">
+              <li data-i18n="t1a">Sistema de diálogos</li><li data-i18n="t1b">Múltiples finales</li><li data-i18n="t1c">Inventario</li><li data-i18n="t1d">Progresión de stats</li><li data-i18n="t1e">Ambientación inmersiva</li>
+            </ul>
+            <div class="project__links">
+              <a href="https://cur4.itch.io/burn-this-city" target="_blank" rel="noopener" class="link-arrow" data-magnetic><span data-i18n="play">Jugar</span><span>↗</span></a>
+              <a href="https://github.com/eminavoid/Burn-This-City" target="_blank" rel="noopener" class="link-arrow" data-magnetic><span data-i18n="code">Código</span><span>↗</span></a>
             </div>
-            <div class="work__image-box">
-              <img src="./images/burn.png" class="work__image" alt="Project 1" />
+          </div>
+        </article>
+
+        <article class="project project--flip" data-engine="unreal" data-reveal>
+          <a class="project__media" href="https://youtu.be/LaMZ6-4bWR4" target="_blank" rel="noopener" data-tilt data-cursor="watch">
+            <img src="./images/work/hachishakusama.webp" alt="Hachishakusama" loading="lazy" width="1600" height="900" />
+            <span class="project__glare"></span>
+            <span class="project__level mono">LVL 02</span>
+          </a>
+          <div class="project__info">
+            <div class="project__meta mono"><span class="tag tag--unreal">Unreal Engine 5</span><span class="project__rule"></span><span data-i18n="genre2">Horror en primera persona</span></div>
+            <h3 class="project__title">Hachishakusama</h3>
+            <p class="project__desc" data-i18n="desc2">Horror en primera persona centrado en la tensión atmosférica y la inmersión del jugador.</p>
+            <ul class="project__tags">
+              <li class="is-role">Lead Programmer</li><li>Blueprints</li><li data-i18n="t2a">Cinemáticas</li><li data-i18n="t2b">Diálogos dinámicos</li>
+            </ul>
+            <div class="project__links">
+              <a href="https://youtu.be/LaMZ6-4bWR4" target="_blank" rel="noopener" class="link-arrow" data-magnetic><span data-i18n="gameplay">Ver gameplay</span><span>↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" data-engine="unreal" data-reveal>
+          <a class="project__media" href="https://youtu.be/d79aSpLChrM" target="_blank" rel="noopener" data-tilt data-cursor="watch">
+            <img src="./images/work/toy-towers.webp" alt="Toy Towers" loading="lazy" width="1600" height="900" />
+            <span class="project__glare"></span>
+            <span class="project__level mono">LVL 03</span>
+          </a>
+          <div class="project__info">
+            <div class="project__meta mono"><span class="tag tag--unreal">Unreal Engine 5</span><span class="project__rule"></span><span data-i18n="genre3">Tower defense FPS</span></div>
+            <h3 class="project__title">Toy Towers</h3>
+            <p class="project__desc" data-i18n="desc3">Tower defense en primera persona con una estética retro de juguetes: defendé tu cuarto oleada tras oleada.</p>
+            <ul class="project__tags">
+              <li>FPS</li><li data-i18n="t3a">Sistema de oleadas</li><li data-i18n="t3b">Torretas con mejoras</li><li data-i18n="t3c">Varios tipos de enemigos</li>
+            </ul>
+            <div class="project__links">
+              <a href="https://youtu.be/d79aSpLChrM" target="_blank" rel="noopener" class="link-arrow" data-magnetic><span data-i18n="gameplay">Ver gameplay</span><span>↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project project--flip" data-engine="unity" data-reveal>
+          <a class="project__media" href="https://zero0110110.itch.io/sangre-asfalto" target="_blank" rel="noopener" data-tilt data-cursor="play">
+            <img src="./images/work/sangre-asfalto.webp" alt="Sangre &amp; Asfalto" loading="lazy" width="1600" height="900" />
+            <span class="project__glare"></span>
+            <span class="project__level mono">LVL 04</span>
+          </a>
+          <div class="project__info">
+            <div class="project__meta mono"><span class="tag tag--unity">Unity 2D</span><span class="project__rule"></span><span data-i18n="genre4">Hero shooter top-down</span></div>
+            <h3 class="project__title">Sangre &amp; Asfalto</h3>
+            <p class="project__desc" data-i18n="desc4">Hero shooter top-down en una Buenos Aires infestada de zombies.</p>
+            <ul class="project__tags">
+              <li class="is-role">Project Manager &amp; Programmer</li><li data-i18n="t4a">3 personajes jugables</li><li data-i18n="t4b">Misiones</li><li>Boss fight</li>
+            </ul>
+            <div class="project__links">
+              <a href="https://zero0110110.itch.io/sangre-asfalto" target="_blank" rel="noopener" class="link-arrow" data-magnetic><span data-i18n="play">Jugar</span><span>↗</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Tools & extras ===== -->
+    <section class="section tools" id="tools">
+      <div class="section__head">
+        <span class="section__index mono">02</span>
+        <h2 class="section__title" data-split data-i18n="toolsTitle">Herramientas &amp; extras</h2>
+        <p class="section__sub" data-reveal data-i18n="toolsSub">Además de juegos, construyo herramientas que les ahorran horas a otros desarrolladores.</p>
+      </div>
+
+      <article class="tool" data-reveal>
+        <div class="tool__info">
+          <div class="tool__badges mono">
+            <span class="tag tag--unity">Unity Editor</span>
+            <span class="tag tag--soon"><span class="dot dot--live"></span><span data-i18n="soon">Próximamente en Asset Store</span></span>
+          </div>
+          <h3 class="tool__title">UGUI <span class="tool__arrow">→</span> UI Toolkit</h3>
+          <p class="tool__lead" data-i18n="toolLead">Un convertidor que transforma interfaces UGUI en UI Toolkit (UXML + USS) con un click, y mantiene funcionando los scripts que ya existen gracias a un puente en runtime.</p>
+          <ul class="tool__features">
+            <li><span class="mono">01</span><span data-i18n="f1">Conversión fiel de layouts, grids, imágenes, texto TMP y controles</span></li>
+            <li><span class="mono">02</span><span data-i18n="f2">UGUI Bridge: tus scripts, eventos y prefabs siguen andando sin tocar código</span></li>
+            <li><span class="mono">03</span><span data-i18n="f3">Bridge Debugger, reconversión de proyectos enteros y suite de tests automatizados</span></li>
+            <li><span class="mono">04</span><span data-i18n="f4">Probada en un juego completo: 9 escenas convertidas, 0 diferencias</span></li>
+          </ul>
+          <div class="tool__stats">
+            <div class="stat"><span class="stat__pre">≤</span><span class="stat__num" data-count="1">0</span><span class="stat__unit">px</span><span class="stat__label mono" data-i18n="s1">precisión de layout</span></div>
+            <div class="stat"><span class="stat__num" data-count="28">0</span><span class="stat__label mono" data-i18n="s2">tests automatizados</span></div>
+            <div class="stat"><span class="stat__num" data-count="0">0</span><span class="stat__label mono" data-i18n="s3">líneas de código a cambiar</span></div>
+          </div>
+        </div>
+
+        <div class="tool__visual">
+          <div class="compare" style="--pos: 50%;" data-cursor="drag">
+            <img src="./images/tools/converter-uitk.webp" alt="UI Toolkit" loading="lazy" width="1600" height="900" />
+            <div class="compare__before"><img src="./images/tools/converter-ugui.webp" alt="UGUI" loading="lazy" width="1600" height="900" /></div>
+            <span class="compare__label compare__label--l mono">UGUI</span>
+            <span class="compare__label compare__label--r mono">UI TOOLKIT</span>
+            <span class="compare__handle"><span>⟷</span></span>
+            <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="UGUI / UI Toolkit" />
+          </div>
+          <p class="compare__hint mono" data-i18n="compareHint">Arrastrá para comparar — el mismo menú en los dos sistemas de UI</p>
+          <pre class="code mono" aria-label="UXML"><code><span class="c-tag">&lt;ui:Button</span> <span class="c-attr">name</span>=<span class="c-str">"play-button"</span> <span class="c-attr">text</span>=<span class="c-str">"Play"</span>
+  <span class="c-attr">class</span>=<span class="c-str">"menu__play-button ugui-button"</span> <span class="c-tag">/&gt;</span>
+<span class="c-com">&lt;!-- generated from UGUI, driven by your scripts --&gt;</span></code></pre>
+        </div>
+      </article>
+
+      <div class="extras">
+        <article class="extra" data-reveal data-tilt>
+          <span class="extra__icon mono">&lt;/&gt;</span>
+          <h3 data-i18n="x1Title">Este portfolio</h3>
+          <p data-i18n="x1Desc">Diseñado y programado a mano, sin frameworks: partículas en canvas, i18n y animaciones propias.</p>
+        </article>
+        <article class="extra extra--soon" data-reveal data-tilt>
+          <span class="extra__icon mono">···</span>
+          <h3 data-i18n="x2Title">Próximo experimento</h3>
+          <p data-i18n="x2Desc">Siempre hay algo compilando. Pronto, más herramientas y prototipos.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section class="section about" id="about">
+      <div class="section__head">
+        <span class="section__index mono">03</span>
+        <h2 class="section__title" data-split data-i18n="aboutTitle">Sobre mí</h2>
+      </div>
+
+      <div class="about__grid">
+        <figure class="about__photo" data-reveal>
+          <img src="./images/portrait.webp" alt="Santiago Batnoska" loading="lazy" width="900" height="1350" />
+          <figcaption class="mono"><span class="dot dot--live"></span><span data-i18n="photoCaption">Player 1 · Listo</span></figcaption>
+        </figure>
+
+        <div class="about__body">
+          <p class="about__intro" data-reveal data-i18n="aboutIntro">Hago juegos que se sienten bien al jugarlos y código que se siente bien al mantenerlo.</p>
+          <p class="about__text" data-reveal data-i18n="aboutText">Soy desarrollador de videojuegos y estudio la Licenciatura en Desarrollo de Videojuegos en UADE. Me especializo en Unity (C#) y Unreal Engine 5 (C++ y Blueprints): mecánicas de gameplay, sistemas de combate, arquitectura con patrones de diseño y herramientas de editor. Lideré y programé proyectos académicos y personales, y siempre busco el próximo desafío técnico.</p>
+
+          <div class="about__stats" data-reveal>
+            <div class="stat"><span class="stat__num" data-count="4">0</span><span class="stat__label mono" data-i18n="a1">juegos desarrollados</span></div>
+            <div class="stat"><span class="stat__num" data-count="2">0</span><span class="stat__label mono" data-i18n="a2">motores</span></div>
+            <div class="stat"><span class="stat__num" data-count="1">0</span><span class="stat__label mono" data-i18n="a3">herramienta para Asset Store</span></div>
+          </div>
+
+          <div class="skills" data-reveal>
+            <div class="skills__group">
+              <h4 class="mono" data-i18n="sk1">Motores</h4>
+              <ul><li>Unity</li><li>Unreal Engine 5</li></ul>
+            </div>
+            <div class="skills__group">
+              <h4 class="mono" data-i18n="sk2">Lenguajes</h4>
+              <ul><li>C#</li><li>C++</li><li>Blueprints</li></ul>
+            </div>
+            <div class="skills__group">
+              <h4 class="mono" data-i18n="sk3">Sistemas</h4>
+              <ul><li data-i18n="sk3a">Gameplay &amp; combate</li><li data-i18n="sk3b">Diálogos &amp; inventario</li><li>UGUI · UI Toolkit</li><li data-i18n="sk3c">Herramientas de editor</li></ul>
+            </div>
+            <div class="skills__group">
+              <h4 class="mono" data-i18n="sk4">Forma de trabajo</h4>
+              <ul><li data-i18n="sk4a">Patrones de diseño</li><li data-i18n="sk4b">Liderazgo de proyecto</li><li>Git · GitHub</li></ul>
             </div>
           </div>
 
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Hachishakusama</h3>
-              <p>
-                A first-person horror game in Unreal Engine 5, focusing on
-                atmospheric tension and player immersion.
-              </p>
-              <ul class="work__list">
-                <li>Blueprints</li>
-                <li>Cutscenes</li>
-                <li>Dynamic Dialogues</li>
-                <li>Lead Programmer</li>
-              </ul>
-
-              <div class="work__links">
-                <a href="https://youtu.be/LaMZ6-4bWR4" target="_blank" class="link__text">
-                  Gameplay <span>&rarr;</span>
-                </a>
-                <!-- <a href="https://github.com/nisarhassan12/portfolio" title="View Source Code" target="_blank">
-                  <img src="./images/github.svg" class="work__code" alt="GitHub">
-                </a> -->
+          <div class="timeline" data-reveal>
+            <div class="timeline__item">
+              <span class="timeline__when mono" data-i18n="eduWhen">En curso</span>
+              <div>
+                <h4 data-i18n="eduTitle">Licenciatura en Desarrollo de Videojuegos</h4>
+                <p>UADE — Universidad Argentina de la Empresa</p>
               </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/screen-ponja.png" class="work__image" alt="Project 1" />
             </div>
           </div>
 
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Toy Towers</h3>
-              <p>
-                A first-person tower defense game in Unreal Engine 5 with a retro toy-themed aesthetic.
-              </p>
-              <ul class="work__list">
-                <li>FPS</li>
-                <li>Wave System</li>
-                <li>Turret System w/ Upgrades</li>
-                <li>Multiple Enemy Types</li>
-              </ul>
-
-              <div class="work__links">
-                <a href="https://youtu.be/d79aSpLChrM" class="link__text">
-                  Gameplay <span>&rarr;</span>
-                </a>
-                <!-- <a href="#">
-                  <img src="./images/github.svg" class="work__code" title="View Source Code" alt="GitHub">
-                </a> -->
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/toy-towers.png" class="work__image" alt="Project 1" />
-            </div>
-          </div>
-
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Sangre & Asfalto</h3>
-              <p>
-                A 2D top-down hero-shooter in Unity, set in a zombie infested Buenos Aires.
-              </p>
-              <ul class="work__list">
-                <li>Project Manager and Programmer</li>
-                <li>3 Playable Characters w/ Skills, Weapons and Stats</li>
-                <li>Mission Objectives</li>
-                <li>Boss Fight</li>
-              </ul>
-
-              <div class="work__links">
-                <a href="https://zero0110110.itch.io/sangre-asfalto" class="link__text">
-                  Visit Site <span>&rarr;</span>
-                </a>
-                <!-- <a href="#">
-                  <img src="./images/github.svg" class="work__code" title="View Source Code" alt="GitHub">
-                </a> -->
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/sangre-asfalto.png" class="work__image" alt="Project 3" />
-            </div>
-          </div>
+          <a href="https://drive.google.com/file/d/1z5KHOZ7yaZt6cnhe5U5VOO0Xew8_8aX4/view?usp=sharing" target="_blank" rel="noopener" class="btn btn--ghost" data-magnetic data-reveal><span data-i18n="resume">Ver CV</span><span class="btn__arrow">↗</span></a>
         </div>
       </div>
     </section>
 
-    <!-- ***** Clients ***** -->
-
-    <!-- <section class="client" id="clients">
-      <div class="row">
-        <h2>Clients</h2>
-        <div class="client__logos">
-          <img src="./images/ronjones.png" class="client__logo" alt="Company 2" />
-          <img src="./images/goldengrid.png" class="client__logo" alt="Company 3" />
-          <img src="./images/bullseye.png" class="client__logo" alt="Company 1" />
-          <img src="./images/mighty-furnitures.png" class="client__logo" alt="Company 1" />
-          <img src="./images/fastlane.png" class="client__logo" alt="Company 3" />
-          <img src="./images/chippy.png" class="client__logo" alt="Company 1" />
-        </div>
+    <!-- ===== Contact ===== -->
+    <section class="section contact" id="contact">
+      <div class="section__head">
+        <span class="section__index mono">04</span>
+        <p class="section__sub" data-reveal data-i18n="contactSub">¿Tenés un proyecto, un puesto o una idea? Me encantaría escucharla.</p>
       </div>
-    </section> -->
+      <h2 class="contact__title" data-fit><span data-split data-i18n="contactTitle">Hablemos.</span></h2>
 
-    <!-- ***** About ***** -->
-
-    <section class="about" id="about">
-      <div class="row">
-        <h2>About Me</h2>
-        <div class="about__content">
-          <div class="about__text">
-            <!-- Replace the below paragraph with info about yourself -->
-            <p>
-              I’m Santiago Batnoska, a Game Developer currently pursuing a Bachelor’s Degree in Video Game Development at Universidad Argentina de la Empresa (UADE). I specialize in Unity (C#) and Unreal Engine 5 (C++), with experience designing and programming gameplay mechanics, combat systems, and game architecture using design patterns. I’ve contributed to both academic and personal projects, taking on key programming roles and project leadership responsibilities. I’m passionate about creating immersive and technically solid interactive experiences, and I’m always eager to learn and take on new challenges within the game industry.
-            </p>
-            <!-- Provide a link to your resume -->
-            <a href="https://drive.google.com/file/d/1z5KHOZ7yaZt6cnhe5U5VOO0Xew8_8aX4/view?usp=sharing" class="btn">My Resume</a>
-          </div>
-
-          <div class="about__photo-container">
-            <!-- Add a nice photo of yourself -->
-            <img class="about__photo" src="./images/DSC_1989 (1).jpg" alt="" />
-          </div>
-        </div>
+      <div class="contact__actions" data-reveal>
+        <button class="email" type="button" data-email="batnoskasantiago@gmail.com" data-magnetic data-cursor="copy">
+          <span class="email__addr">batnoskasantiago@gmail.com</span>
+          <span class="email__hint mono" data-i18n="copy">Click para copiar</span>
+        </button>
       </div>
+
+      <ul class="socials" data-reveal>
+        <li><a href="https://www.linkedin.com/in/santiago-batnoska/" target="_blank" rel="noopener" data-magnetic><span class="mono">IN</span>LinkedIn<span class="socials__arrow">↗</span></a></li>
+        <li><a href="https://github.com/Batnoska" target="_blank" rel="noopener" data-magnetic><span class="mono">GH</span>GitHub<span class="socials__arrow">↗</span></a></li>
+        <li><a href="mailto:batnoskasantiago@gmail.com" data-magnetic><span class="mono">@</span>Email<span class="socials__arrow">↗</span></a></li>
+        <li><a href="https://drive.google.com/file/d/1z5KHOZ7yaZt6cnhe5U5VOO0Xew8_8aX4/view?usp=sharing" target="_blank" rel="noopener" data-magnetic><span class="mono">CV</span><span data-i18n="cv">Currículum</span><span class="socials__arrow">↗</span></a></li>
+      </ul>
     </section>
   </main>
 
-  <!-- ***** Contact ***** -->
-
-  <section class="contact" id="contact">
-    <div class="row">
-      <h2>Get in Touch</h2>
-      <div class="contact__info">
-        <p>
-          Are you looking for a passionate Game Developer to collaborate on your next Unity or Unreal Engine 5 project? Have questions, ideas, or just want to talk about game development? Feel free to reach out — I’m always open to connect, share knowledge, or explore new opportunities in the industry. 😊
-The best way to contact me is via email — I’ll make sure to reply as soon as possible!
-        </p>
-        <!-- Replace the email with yours -->
-        <a href="mailto:batnoskasantiago@gmail.com" class="btn">batnoskasantiago@gmail.com</a>
-      </div>
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer__row">
+      <span class="mono">© <span class="year">2026</span> Santiago Batnoska</span>
+      <span class="mono footer__clock"><span class="dot dot--live"></span>Buenos Aires — <span class="clock">--:--</span></span>
+      <span class="mono" data-i18n="handmade">Diseñado y programado a mano</span>
+      <a href="#top" class="mono footer__top" data-magnetic><span data-i18n="backTop">Volver arriba</span> ↑</a>
     </div>
-  </section>
-
-  <!-- ***** Footer ***** -->
-
-  <footer role="contentinfo" class="footer">
-    <div class="row">
-      <!-- Update the links to point to your accounts -->
-      <ul class="footer__social-links">
-        <!-- <li class="footer__social-link-item">
-          <a href="https://twitter.com/nisarhassan12/" title="Link to Twitter Profile">
-            <img src="./images/twitter.svg" class="footer__social-image" alt="Twitter">
-          </a>
-        </li> -->
-        <li class="footer__social-link-item">
-          <a href="https://github.com/Batnoska" title="Link to Github Profile">
-            <img src="./images/github.svg" class="footer__social-image" alt="Github">
-          </a>
-        </li>
-        <!-- <li class="footer__social-link-item">
-          <a href="https://codepen.io/nisar_hassan" title="Link to Codepen Profile">
-            <img src="./images/codepen.svg" class="footer__social-image" alt="Codepen">
-          </a>
-        </li> -->
-        <li class="footer__social-link-item">
-          <a href="https://www.linkedin.com/in/santiago-batnoska/">
-            <img src="./images/linkedin.svg" title="Link to Linkedin Profile" class="footer__social-image" alt="Linkedin">
-          </a>
-        </li>
-      </ul>
-
-      <!-- If you give me some credit by keeping the below paragraph, will be huge for me 😊 Thanks. -->
-      <p>
-        &copy; 2025
-      </p>
-      <!-- <div class="footer__github-buttons">
-        <iframe
-          src="https://ghbtns.com/github-btn.html?user=nisarhassan12&repo=portfolio-template&type=watch&count=true"
-          frameborder="0" scrolling="0" width="170" height="20" title="Watch Portfolio Template on GitHub">
-        </iframe>
-      </div> -->
-    </div>
+    <div class="footer__giant" aria-hidden="true">BATNOSKA</div>
   </footer>
 
-  <a href="#top" class="back-to-top" title="Back to Top">
-    <img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"/>
-  </a>
   <script src="./index.js"></script>
 </body>
 
