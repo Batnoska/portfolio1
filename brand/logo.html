@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Logo — Santiago Batnoska</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  /* Square publisher logo. Everything sits inside the central circle, so a round crop keeps it whole. */
+  :root { --bg: #09090b; --text: #ecebe6; --ember: #ff4d1c; --size: 1024px; }
+  html, body { margin: 0; }
+  body { width: var(--size); height: var(--size); background: var(--bg); overflow: hidden; position: relative; font-family: "Syne", sans-serif; }
+  .glow { position: absolute; inset: 0; background:
+      radial-gradient(60% 45% at 50% 108%, rgba(255, 77, 28, 0.55), transparent 70%),
+      radial-gradient(40% 30% at 50% 100%, rgba(255, 176, 59, 0.25), transparent 70%); }
+  canvas { position: absolute; inset: 0; }
+  .ring { position: absolute; inset: 7%; border-radius: 50%; border: 2px solid rgba(236, 235, 230, 0.07); }
+  .mark { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 0; }
+  .mark { transform: translateY(-3%); }
+  .mark span { font-weight: 800; font-size: 300px; line-height: 1; letter-spacing: -0.06em; }
+  .s { color: var(--text); }
+  .b { color: transparent; -webkit-text-stroke: 12px var(--text); margin-left: 0.01em; }
+  .dot { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: var(--ember);
+         box-shadow: 0 0 0 14px rgba(255, 77, 28, 0.18), 0 0 50px rgba(255, 77, 28, 0.8); }
+  .corner { position: absolute; width: 70px; height: 70px; border: 0 solid rgba(236, 235, 230, 0.3); }
+  .tl { left: 22%; top: 24%; border-top-width: 4px; border-left-width: 4px; }
+  .br { right: 22%; bottom: 24%; border-bottom-width: 4px; border-right-width: 4px; }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <canvas width="1024" height="1024"></canvas>
+  <div class="ring"></div>
+  <span class="corner tl"></span><span class="corner br"></span>
+  <div class="mark"><span class="s">S</span><span class="b">B</span></div>
+  <span class="dot"></span>
+<script>
+  // Embers rising from the glow, seeded so every export is identical.
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const c = document.querySelector("canvas"), ctx = c.getContext("2d");
+  ctx.globalCompositeOperation = "lighter";
+  for (let i = 0; i < 46; i++) {
+    const x = 180 + rand() * 664, y = 640 + Math.pow(rand(), 0.6) * 340, r = 1.2 + rand() * 3, a = 0.3 + rand() * 0.7, h = 10 + rand() * 30;
+    ctx.fillStyle = `hsla(${h}, 100%, 55%, ${a * 0.18})`; ctx.beginPath(); ctx.arc(x, y, r * 3.2, 0, 7); ctx.fill();
+    ctx.fillStyle = `hsla(${h + 12}, 100%, 65%, ${a})`; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+  }
+  // The spark sits on the B's top-right corner.
+  document.fonts.ready.then(() => {
+    const b = document.querySelector(".b").getBoundingClientRect(), dot = document.querySelector(".dot");
+    dot.style.left = `${b.right - 0.06 * b.width}px`;
+    dot.style.top = `${b.top + 0.2 * b.height}px`;
+  });
+</script>
+</body>
+</html>
