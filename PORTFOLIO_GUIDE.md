@@ -75,12 +75,23 @@ saltea el arranque y arranca seleccionado Portfolio.
 Un cuarto de 2005 visto por una cámara digital chica: pared de casa, mueble de madera, tele de tubo, posters, figuras y
 un estante de lomos reales de PS2. Muy poco texto y pocos objetos: el material real es el protagonista.
 
+Es una escena 3D de verdad, hecha con CSS: `.room` pone la perspectiva y `.world` es el mundo, que gira apenas con el mouse.
+Cada cosa vive a su profundidad (`--row-z`, `--kos-z`, `--tv-z`, `--D` para la pared), y la tele y la PS2 son cajas con
+caras. Dos reglas para no romperla: dentro de `.world` no sirven `filter`, `opacity` ni `overflow` en elementos con
+`preserve-3d`, porque aplastan lo que tienen adentro; y `.world` va con `pointer-events: none`, porque si no sus planos
+invisibles tapan los lomos. Lo que se abre vuelve a activar `pointer-events`. `stageDepth()` calcula lo que depende de la
+posición final: sombras en la pared, reflejos en la madera y el cable del mando.
+
 La luz cuenta una sola historia y conviene respetarla al cambiar colores: flash de frente que cae hacia las esquinas
 (`.ph-falloff`), negros levantados a marrón (`.ph-blacks`), ruido de sensor (`.ph-noise`) y la tele como único color frío.
 Encima de toda la página va `.lens`, con la viñeta y las scanlines de una digital vieja: la intensidad de cada una se
 cambia ahí. Las imágenes de `images/parches/cuarto/` ya vienen procesadas (papel con pliegues y cinta, luz del cuarto,
-ruido y algo de JPEG), así que una imagen nueva necesita el mismo tratamiento para no parecer pegada. Todo lo que se apoya
-en el estante lleva su sombra de contacto, y su sombra en la pared es más larga cuanto más lejos está de ella.
+ruido y algo de JPEG), así que una imagen nueva necesita el mismo tratamiento para no parecer pegada. Las caras de la PS2
+son fotos reales enderezadas con perspectiva: si se suma otra consola, conviene hacer lo mismo en vez de pegar un recorte.
+
+La madera y la pared son escaneos CC0 de Poly Haven que se repiten sin costura. Se usan siempre a escala fija (`--wood-w`),
+nunca con `100% 100%`: cada superficie toma otro pedazo con `background-position`, y las puertas giran la textura para que
+la veta vaya vertical. Estirar una textura es lo primero que hace que el cuarto se vea barato.
 
 - **El estante:** los juegos con parches resaltan y son los únicos que se abren; el resto es decorado. Los lomos se
   levantan y se inclinan al pasar el mouse (`livingRoom()`). `fitShelf()` muestra solo los que entran a la derecha, para que

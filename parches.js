@@ -61,13 +61,13 @@
   const TEXT = {
     es: {
       title: "Parches y mods", open: "Abrir", close: "Cerrar", listTitle: "Parches",
-      contact: "¿Un error?", legal: "Proyecto de fans. No incluye juegos.", credits: "Cajas:", creditsDiscs: "Discos:", creditsTv: "Tele:",
+      contact: "¿Un error?", legal: "Proyecto de fans. No incluye juegos.", credits: "Cajas:", creditsDiscs: "Discos:", creditsTv: "Tele:", creditsWood: "Madera y pared:",
       download: "Descargar", front: "Tapa de", lang: "English",
       patches: (n) => (n === 1 ? "1 parche" : `${n} parches`),
     },
     en: {
       title: "Patches & mods", open: "Open", close: "Close", listTitle: "Patches",
-      contact: "Found a bug?", legal: "Fan project. No games included.", credits: "Cases:", creditsDiscs: "Discs:", creditsTv: "TV:",
+      contact: "Found a bug?", legal: "Fan project. No games included.", credits: "Cases:", creditsDiscs: "Discs:", creditsTv: "TV:", creditsWood: "Wood and wall:",
       download: "Download", front: "Front cover of", lang: "Español",
       patches: (n) => (n === 1 ? "1 patch" : `${n} patches`),
     },
@@ -144,14 +144,17 @@
       if (game) {
         return `<button class="spine spine--on" type="button" data-game="${key}" aria-haspopup="dialog" style="--dist:0">
           <span class="spine__bloom" style="background-image:url('${game.folder}lomo.webp')"></span>
-          <span class="spine__body"><span class="spine__case"><img src="${game.folder}lomo.webp" alt="" width="106" height="1324" /></span></span>
+          <span class="spine__body"><span class="spine__hold">
+            <span class="spine__lid"></span>
+            <span class="spine__side" style="background-image:url('${game.folder}tapa.webp')"></span>
+            <span class="spine__case"><img src="${game.folder}lomo.webp" alt="" width="106" height="1324" /></span>
+          </span></span>
           <span class="spine__tag"><span class="spine__name"><i class="led"></i><span data-name></span></span><span class="keys" aria-hidden="true"><b class="key-x">✕</b><span data-open></span></span></span></button>`;
       }
-      // A real shelf isn't perfect: each case catches the light differently and they don't quite line up.
+      // A real shelf isn't perfect: each case catches the light a little differently.
       const wobble = Math.sin(i * 12.9898) * 43758.5453, jitter = wobble - Math.floor(wobble);
       const base = (Math.max(0.46, 0.76 - dist * 0.014) + (jitter - 0.5) * 0.07).toFixed(2);
-      const gap = i && jitter > 0.72 ? "margin-left:1px;" : "";
-      return `<span class="spine" aria-hidden="true" data-base="${base}" style="--dist:${dist};--b:${base};${gap}"><span class="spine__body"><span class="spine__case"><img src="./images/parches/lomos/${key}.webp" alt="" width="60" height="720" /></span></span></span>`;
+      return `<span class="spine" aria-hidden="true" data-base="${base}" style="--dist:${dist};--b:${base}"><span class="spine__body"><span class="spine__hold"><span class="spine__lid"></span><span class="spine__case"><img src="./images/parches/lomos/${key}.webp" alt="" width="60" height="720" /></span></span></span></span>`;
     }).join("");
     $("#row").addEventListener("click", (e) => {
       const spine = e.target.closest("[data-game]");
@@ -181,14 +184,93 @@
     if (!narrow) all[Math.min(all.length - 1, lastLit + room)].classList.add("is-last");
   }
 
+  // What depends on where things ended up: the shadows on the wall, what the wood mirrors, and the cable.
+  function stageDepth() {
+    const room = $(".room"), world = $("#world"), casts = $("#casts"), glints = $("#glints"), halo = $("#tv-halo");
+    const css = getComputedStyle(room), P = parseFloat(css.getPropertyValue("--P")), D = parseFloat(css.getPropertyValue("--D"));
+    const px = (name) => parseFloat(css.getPropertyValue(name));
+    const keep = world.style.transform;
+    world.style.transform = "none";
+    const R = room.getBoundingClientRect(), ox = R.left + R.width / 2;
+    const narrow = window.matchMedia("(max-width: 760px)").matches;
+    const boardLeft = $("#board").getBoundingClientRect().left;
+    // From what the screen shows at depth z, back to where the thing really is on the plank.
+    const onPlank = (x, z) => ox + (x - ox) * (P + z) / P - boardLeft;
+    const size = (v, z) => v * (P + z) / P;
+    let shadows = "", wood = "";
+
+    const reflect = (src, r, z, ao = true) => {
+      const left = onPlank(r.left, z), width = size(r.width, z), height = size(r.height, z);
+      if (src) wood += `<img class="glint" src="${src}" alt="" style="left:${left}px;width:${width}px;top:${D - z}px;height:${height * 5}px" />`;
+      if (ao) wood += `<i class="ao" style="left:${left - 3}px;width:${width + 6}px;top:${D - z - 34}px;height:68px"></i>`;
+    };
+    const castImg = (el) => {
+      const r = el.getBoundingClientRect();
+      shadows += `<img class="cast" src="${el.getAttribute("src")}" alt="" style="left:${r.left - R.left + 11}px;top:${r.top - R.top + 11}px;width:${r.width}px;height:${r.height}px" />`;
+      return r;
+    };
+
+    const boardY = $("#board").getBoundingClientRect().top - R.top, eye = R.height * 0.44;
+    const wallFoot = eye + (boardY - eye) * P / (P + D);
+    shadows += `<div class="wall-ao" style="top:${wallFoot - 110}px;height:110px"></div>`;
+
+    const kos = $(".fig--kos img"), kr = castImg(kos);
+    if (!narrow) {
+      reflect(kos.getAttribute("src"), kr, px("--kos-z"), false);
+      castImg($(".fig--top img"));
+      const tv = $("#tv").getBoundingClientRect(), tz = px("--tv-z");
+      shadows += `<div class="cast cast--box" style="left:${tv.left - R.left + 14}px;top:${tv.top - R.top + 12}px;width:${tv.width}px;height:${tv.height}px"></div>`;
+      reflect($(".tv__body").getAttribute("src"), tv, tz);
+      wood += `<i class="tv-light" style="left:${onPlank(tv.left, tz) + tv.width * 0.12}px;width:${tv.width * 0.76}px;top:${D - tz}px;height:${tz}px"></i>`;
+    }
+    const halfW = $("#tv").getBoundingClientRect();
+    halo.style.cssText += `;left:${halfW.left - R.left - halfW.width * 0.3}px;top:${halfW.top - R.top - halfW.height * 0.3}px;width:${halfW.width * 1.5}px;height:${halfW.height * 1.4}px`;
+
+    // The row, case by case.
+    const rz = px("--row-z");
+    let first = null, last = null;
+    $$("#row .spine").forEach((el) => {
+      if (!el.offsetWidth) return;
+      const r = el.getBoundingClientRect();
+      if (r.right < R.left - 40 || r.left > R.right + 40) return;
+      first = first || r;
+      last = r;
+      reflect(el.querySelector("img").getAttribute("src"), r, rz, false);
+    });
+    if (first && last) {
+      const left = onPlank(first.left, rz), right = onPlank(last.right, rz);
+      wood += `<i class="ao" style="left:${left - 300}px;width:${right - left + 303}px;top:${D - rz - 34}px;height:68px"></i>`;
+      shadows += `<div class="cast cast--box" style="left:-40px;top:${first.top - R.top + 12}px;width:${last.right - R.left + 50}px;height:${first.height}px"></div>`;
+    }
+    casts.innerHTML = shadows;
+    glints.innerHTML = wood;
+
+    // The controller's cable, from its top corner to the console's first port.
+    const cubby = $("#cubby");
+    if (!narrow && cubby.offsetWidth) {
+      const C = cubby.getBoundingClientRect(), m = $("#mando").getBoundingClientRect(), f = $("#ps2-front").getBoundingClientRect();
+      const x1 = m.left - C.left + m.width * 0.9, y1 = m.top - C.top + 2;
+      const x2 = f.left - C.left + f.width * 0.147, y2 = f.top - C.top + f.height * 0.48;
+      const d = `M ${x1} ${y1} C ${x1 + 18} ${y1 - 26}, ${x2 - 70} ${y2 - 44}, ${x2 - 34} ${y2 + 26} S ${x2 - 10} ${y2 + 10}, ${x2} ${y2}`;
+      $$("#cable path").forEach((path) => path.setAttribute("d", d));
+      const cd = px("--cd"), pz = 26, near = ox + (f.left - ox) * (P + pz) / P - C.left, wide = size(f.width, pz), high = size(f.height, pz);
+      $("#cubby-floor").innerHTML = `<img class="glint" src="${$("#ps2-front").getAttribute("src")}" alt="" style="left:${near}px;width:${wide}px;top:${cd - pz}px;height:${high * 5}px" /><i class="ao" style="left:${near - 3}px;width:${wide + 6}px;top:${cd - pz - 34}px;height:68px"></i>`;
+    }
+    world.style.transform = keep;
+  }
+
   // The room reacts: a light follows the pointer, and running it along the shelf
   // lifts and leans the spines, like brushing them with a finger. With no pointer
   // around, the light wanders on its own.
   function livingRoom() {
     if (calm) return;
-    const room = $(".room"), row = $("#row"), unit = $("#unit"), posters = $("#posters"), torch = $("#torch");
+    const room = $(".room"), row = $("#row"), world = $("#world"), torch = $("#torch"), gloss = $("#gloss"), glossDoor = $("#gloss-door");
     const items = $$(".spine", row).map((el) => ({ el, body: $(".spine__body", el), on: el.classList.contains("spine--on"), base: Number(el.dataset.base || 1), cx: 0, lift: 0, lean: 0, glow: 0, last: "", lastB: "" }));
-    const measure = () => items.forEach((s) => { const r = s.el.getBoundingClientRect(); s.cx = r.left + r.width / 2; });
+    let woodLeft = 0;
+    const measure = () => {
+      items.forEach((s) => { const r = s.el.getBoundingClientRect(); s.cx = r.left + r.width / 2; });
+      woodLeft = $("#board").offsetLeft;
+    };
     measure();
     window.addEventListener("resize", measure);
     window.addEventListener("load", measure);
@@ -219,13 +301,16 @@
       lx += (targetX - lx) * (idle ? 0.018 : 0.09);
       ly += ((idle ? room.clientHeight * 0.5 + Math.sin(now * 0.00037) * 60 : pointer.y) - ly) * 0.07;
       torch.style.transform = `translate3d(${lx.toFixed(1)}px, ${ly.toFixed(1)}px, 0)`;
+      const onWood = `translate3d(${(lx - woodLeft).toFixed(1)}px, 0, 0)`;
+      gloss.style.transform = onWood;
+      glossDoor.style.transform = onWood;
 
       pointer.vx *= 0.86;
       const brushing = !idle && pointer.inRow;
-      const lean = clamp(pointer.vx * 0.2, -3.2, 3.2);
+      const lean = clamp(pointer.vx * 0.14, -2, 2);
       for (const s of items) {
         const d = (s.cx - lx) / 140, f = Math.exp(-d * d);
-        s.lift += ((brushing && !s.on ? f * 7 : 0) - s.lift) * 0.17;
+        s.lift += ((brushing && !s.on ? f * 5 : 0) - s.lift) * 0.17;
         s.lean += ((brushing ? lean * f : 0) - s.lean) * 0.15;
         s.glow += (f * (idle ? 0.4 : 1) - s.glow) * 0.11;
         const transform = `translateY(${(-s.lift).toFixed(2)}px) rotate(${s.lean.toFixed(2)}deg)`;
@@ -234,13 +319,12 @@
         if (!s.on && bright !== s.lastB) { s.el.style.setProperty("--b", bright); s.lastB = bright; }
       }
 
-      // Depth: posters, furniture and light drift at different speeds.
-      const tx = idle ? 0 : clamp((pointer.lastX / width - 0.5) * 2, -1, 1);
-      const ty = idle ? 0 : clamp((pointer.y / room.clientHeight - 0.5) * 2, -1, 1);
-      px += (tx - px) * 0.05;
-      py += (ty - py) * 0.05;
-      unit.style.transform = `translate3d(${(px * -6).toFixed(2)}px, ${(py * -2.5).toFixed(2)}px, 0)`;
-      posters.style.transform = `translate3d(${(px * -2.5).toFixed(2)}px, ${(py * -1).toFixed(2)}px, 0)`;
+      // The camera: looking around moves everything by its real depth. Alone, it sways a little.
+      const tx = idle ? Math.sin(now * 0.00026) * 0.42 : clamp((pointer.lastX / width - 0.5) * 2, -1, 1);
+      const ty = idle ? Math.sin(now * 0.00019) * 0.3 : clamp((pointer.y / room.clientHeight - 0.5) * 2, -1, 1);
+      px += (tx - px) * 0.045;
+      py += (ty - py) * 0.045;
+      world.style.transform = `translateX(${(px * -7).toFixed(2)}px) rotateX(${(py * 1).toFixed(3)}deg) rotateY(${(px * -2.3).toFixed(3)}deg)`;
       requestAnimationFrame(frame);
     }
     const resume = () => { if (!running) { running = true; requestAnimationFrame(frame); } };
@@ -658,12 +742,19 @@
 
   buildShelf();
   fitShelf();
-  window.addEventListener("resize", fitShelf);
+  let settle = 0;
+  window.addEventListener("resize", () => {
+    fitShelf();
+    clearTimeout(settle);
+    settle = setTimeout(stageDepth, 120);
+  });
   paint();
   stamp();
   television();
   livingRoom();
   dust();
+  stageDepth();
+  window.addEventListener("load", stageDepth);
   const list = $(".list");
   if (calm || !("IntersectionObserver" in window)) list.classList.add("is-in");
   else new IntersectionObserver(([entry], io) => { if (entry.isIntersecting) { list.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.15 }).observe(list);
