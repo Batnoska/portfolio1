@@ -25,7 +25,8 @@
     es: {
       skip: "Saltar al contenido",
       boot1: "Inicializando motor…", boot2: "Compilando shaders…", boot3: "Cargando niveles…", boot4: "Encendiendo las brasas…",
-      navWork: "Proyectos", navTools: "Herramientas", navAbout: "Sobre mí", navContact: "Contacto",
+      navWork: "Proyectos", navTools: "Herramientas", navAbout: "Sobre mí", navContact: "Contacto", navPatches: "Parches",
+      changeDisc: "Cambiar de disco",
       heroKicker: "Game Developer · Buenos Aires, AR",
       heroLead: "Programo sistemas de gameplay, herramientas y experiencias interactivas en Unity y Unreal Engine.",
       heroNow: "Enfoque",
@@ -76,7 +77,8 @@
     en: {
       skip: "Skip to content",
       boot1: "Initializing engine…", boot2: "Compiling shaders…", boot3: "Loading levels…", boot4: "Lighting the embers…",
-      navWork: "Work", navTools: "Tools", navAbout: "About", navContact: "Contact",
+      navWork: "Work", navTools: "Tools", navAbout: "About", navContact: "Contact", navPatches: "Patches",
+      changeDisc: "Change disc",
       heroKicker: "Game Developer · Buenos Aires, AR",
       heroLead: "I build gameplay systems, tools and interactive experiences in Unity and Unreal Engine.",
       heroNow: "Focus",
@@ -606,7 +608,12 @@
   applyLang(lang, false);
   window.addEventListener("resize", fit);
   if (document.fonts) document.fonts.ready.then(fit);
-  boot();
+  // The boot gate (gate.js) goes first: it may also have changed the language.
+  (window.sbGate || Promise.resolve()).then(() => {
+    const chosen = store.get("sb-lang");
+    if (chosen && chosen !== lang) applyLang(chosen, false);
+    boot();
+  });
   embers();
   cursor();
   magnetic();

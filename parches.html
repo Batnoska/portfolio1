@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parches y mods · Santiago Batnoska</title>
+  <meta name="description" content="Traducciones y mejoras para juegos de la época de PS2. Incluye Xenosaga Episode II en español." />
+  <meta name="theme-color" content="#150d08" />
+  <meta property="og:title" content="Parches y mods · Santiago Batnoska" />
+  <meta property="og:description" content="Traducciones y mejoras para juegos de la época de PS2." />
+  <meta property="og:image" content="./images/parches/xenosaga2/tapa.webp" />
+  <link rel="icon" type="image/png" href="./images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Fira+Sans:wght@300;400;500&family=Michroma&family=VT323&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="parches.css" />
+</head>
+
+<body>
+  <header class="top">
+    <a class="top__link" href="index.html"><span aria-hidden="true">←</span> Portfolio</a>
+    <div class="top__right">
+      <button class="top__link top__sound" id="sound" type="button" aria-pressed="true" aria-label="Sonido / Sound">♪</button>
+      <button class="top__link" id="lang" type="button" aria-label="Cambiar idioma / Change language">English</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== The room: one photo from 2004, except that it moves ===== -->
+    <section class="room" aria-labelledby="page-title">
+      <div class="room__wall" aria-hidden="true"></div>
+      <div class="room__torch" id="torch" aria-hidden="true"></div>
+
+      <div class="posters" id="posters" aria-hidden="true">
+        <figure class="poster poster--a"><img src="./images/parches/cuarto/poster-xenosaga.webp" alt="" width="640" height="860" /></figure>
+        <figure class="poster poster--b"><img src="./images/parches/cuarto/poster-ffx.webp" alt="" width="600" height="878" /></figure>
+      </div>
+
+      <div class="unit" id="unit">
+        <div class="unit__games"><div class="shelf__row" id="row"></div></div>
+        <div class="fig fig--kos" aria-hidden="true"><i class="fig__base"></i><img src="./images/parches/cuarto/kosmos.webp" alt="" /></div>
+        <div class="tvset">
+          <div class="fig fig--top" aria-hidden="true"><img src="./images/parches/cuarto/gundam.webp" alt="" /></div>
+          <div class="tv__halo" id="tv-halo" aria-hidden="true"></div>
+          <div class="tv" id="tv" data-mode="menu">
+            <div class="tv__screen">
+              <div class="tv__picture">
+                <div class="tv__menu">
+                  <canvas class="tv__ring" id="tv-ring" aria-hidden="true"></canvas>
+                  <h1 class="tv__title" id="page-title" data-t="title">Parches y mods</h1>
+                </div>
+                <img class="tv__shot" id="tv-shot" alt="" />
+                <canvas class="tv__static" id="tv-static" width="128" height="96" aria-hidden="true"></canvas>
+                <p class="tv__osd" id="tv-osd" aria-hidden="true"></p>
+                <div class="tv__bar" aria-hidden="true"></div>
+              </div>
+              <div class="tv__scan" aria-hidden="true"></div>
+            </div>
+            <img class="tv__body" src="./images/parches/cuarto/tele.webp" alt="" width="900" height="665" />
+            <div class="tv__spill" id="tv-spill" aria-hidden="true"></div>
+          </div>
+          <div class="tv__reflect" aria-hidden="true"></div>
+          <div class="ps2" aria-hidden="true"><img src="./images/parches/cuarto/ps2.webp" alt="" width="800" height="254" /></div>
+        </div>
+        <div class="board board--upper" aria-hidden="true"></div>
+      </div>
+      <div class="board" aria-hidden="true"></div>
+      <div class="room__below" aria-hidden="true"><i class="knob knob--a"></i><i class="knob knob--b"></i></div>
+
+      <canvas class="room__dust" id="dust" aria-hidden="true"></canvas>
+      <div class="ph-falloff" aria-hidden="true"></div>
+      <div class="ph-blacks" aria-hidden="true"></div>
+      <div class="ph-noise" aria-hidden="true"></div>
+      <div class="stamp" id="stamp" aria-hidden="true"></div>
+      <div class="shutter" aria-hidden="true"></div>
+    </section>
+
+    <section class="list" aria-labelledby="list-title">
+      <h2 id="list-title" data-t="listTitle">Parches</h2>
+      <div id="list"></div>
+      <noscript>
+        <p>Xenosaga Episode II: <a href="https://github.com/Batnoska/xenosaga2-es">traducción al español</a> y <a href="https://github.com/Batnoska/xenosaga2-definitive">Definitive Edition</a>.</p>
+      </noscript>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><span data-t="contact">¿Un error?</span> <a href="mailto:batnoskasantiago@gmail.com">Email</a> · <a href="https://github.com/Batnoska" target="_blank" rel="noopener">GitHub</a></p>
+    <p><span data-t="legal">Proyecto de fans. No incluye juegos.</span>
+      <span data-t="credits">Cajas:</span> <a href="https://www.thecoverproject.net/" target="_blank" rel="noopener">The Cover Project</a>.
+      <span data-t="creditsDiscs">Discos:</span> <a href="https://gamesdb.launchbox-app.com/" target="_blank" rel="noopener">LaunchBox</a>.
+      <span data-t="creditsTv">Tele:</span> <a href="https://commons.wikimedia.org/wiki/File:Sony_Trinitron_KV-27FS100.jpg" target="_blank" rel="noopener">Roboat06</a> (CC BY-SA 4.0).
+      PS2: <a href="https://commons.wikimedia.org/wiki/File:Sony-PlayStation-2-30001-wController-L.png" target="_blank" rel="noopener">Evan-Amos</a>.</p>
+  </footer>
+
+  <!-- ===== The case: leaves the shelf, turns to its front and opens on the game's title screen ===== -->
+  <dialog class="case" id="case" aria-labelledby="case-title">
+    <div class="case__scrim"></div>
+    <div class="case__bloom" id="bloom"></div>
+    <div class="case__stage">
+      <div class="fly" id="fly">
+        <div class="tilt" id="tilt">
+          <div class="box" id="box">
+            <div class="tray" id="tray"></div>
+            <div class="wall wall--r"></div>
+            <div class="wall wall--t"></div>
+            <div class="wall wall--b"></div>
+            <div class="hinge">
+              <div class="hinge__out"><img id="case-spine" alt="" /></div>
+              <div class="hinge__in"></div>
+              <div class="lid">
+                <div class="lid__out"><img id="case-front" alt="" /><span class="sheen"></span></div>
+                <div class="lid__in">
+                  <div class="screen" id="screen">
+                    <div class="screen__art" id="screen-art"></div>
+                    <div class="screen__veil"></div>
+                    <h2 class="screen__logo" id="case-title"><img id="screen-logo" alt="" /></h2>
+                    <div class="menu" id="menu"></div>
+                  </div>
+                  <i class="clip clip--t"></i><i class="clip clip--b"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case__flash"></div>
+    <div class="case__sheet" id="sheet"></div>
+    <button class="case__close keys" id="close" type="button" autofocus><b class="key-o" aria-hidden="true">○</b><span data-t="close">Cerrar</span></button>
+    <div class="ph-blacks" aria-hidden="true"></div>
+    <div class="ph-noise" aria-hidden="true"></div>
+    <div class="stamp" id="stamp-case" aria-hidden="true"></div>
+    <div class="lens" aria-hidden="true"></div>
+  </dialog>
+
+  <div class="lens" aria-hidden="true"></div>
+  <script src="./parches.js"></script>
+</body>
+
+</html>

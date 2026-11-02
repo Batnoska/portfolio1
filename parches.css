@@ -1,0 +1,395 @@
+/* ==========================================================================
+   Parches y mods: a bedroom in 2004, as a small digital camera would have seen
+   it. One story for the light: a warm room, a flash from the front that falls
+   off towards the corners, and a CRT as the only cool colour. The game with
+   patches opens on its title screen.
+   ========================================================================== */
+
+:root {
+  --ink: #f6ecdc;
+  --dim: #b4a48f;
+  --amber: #f2bd7c;
+  --night: #150d08;
+  --cool: #6ea4ff;
+  --sans: "Fira Sans", "Trebuchet MS", Verdana, sans-serif;
+  --ps2: "Michroma", "Segoe UI", Tahoma, sans-serif;
+  --rpg: "Cinzel", Georgia, "Times New Roman", serif;
+  --osd: "VT323", "Courier New", monospace;
+  --gutter: clamp(16px, 4vw, 48px);
+  /* Everything in the flash casts the same hard, short shadow */
+  --flash-shadow: 7px 8px 7px rgba(30, 14, 5, 0.55);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); scrollbar-gutter: stable; }
+html:has(dialog[open]) { overflow: hidden; }
+body { margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.5; color: var(--ink); background: var(--night); overflow-x: clip; }
+img { display: block; max-width: 100%; }
+figure, h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+/* ----- The photo: blacks lifted to warm brown, flash falling off, sensor noise ----- */
+.ph-falloff, .ph-blacks, .ph-noise { position: absolute; inset: 0; pointer-events: none; }
+.ph-falloff { z-index: 5; mix-blend-mode: multiply; background: radial-gradient(ellipse 80% 94% at 42% 44%, #f7ebd9 0%, #ead5b9 32%, #bf9b77 64%, #624734 100%); }
+.ph-blacks { z-index: 6; mix-blend-mode: lighten; background: #1d100a; }
+.ph-noise {
+  z-index: 7; opacity: 0.16; mix-blend-mode: overlay;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* The date the camera prints in the corner */
+.stamp { position: absolute; right: clamp(14px, 2.6vw, 34px); bottom: clamp(12px, 2.4vh, 26px); z-index: 8; width: clamp(92px, 9vw, 132px); color: #ff8a2a; filter: drop-shadow(0 0 2px rgba(255, 120, 30, 0.85)) blur(0.35px); opacity: 0; animation: stamp 0.2s steps(1) 1s both; }
+.stamp svg { display: block; width: 100%; height: auto; }
+@keyframes stamp { to { opacity: 0.92; } }
+/* The flash going off when the page opens */
+.shutter { position: absolute; inset: 0; z-index: 9; pointer-events: none; background: #fff6e6; opacity: 0; animation: shutter 0.85s ease-out both; }
+@keyframes shutter { 0% { opacity: 0.5; } 100% { opacity: 0; } }
+
+/* The lens: the vignette and the interlaced lines of an old digital camera, over the whole page */
+.lens {
+  position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  background:
+    radial-gradient(ellipse 76% 80% at 50% 48%, transparent 50%, rgba(16, 8, 3, 0.2) 74%, rgba(8, 4, 2, 0.62) 100%),
+    repeating-linear-gradient(0deg, rgba(8, 4, 2, 0.12) 0 1px, rgba(255, 240, 220, 0.014) 1px 2px, transparent 2px 3px);
+}
+.lens::after { content: ""; position: absolute; left: 0; right: 0; top: -24%; height: 24%; background: linear-gradient(180deg, transparent, rgba(255, 240, 215, 0.032), transparent); animation: lens-roll 11s linear infinite; }
+@keyframes lens-roll { to { transform: translateY(520%); } }
+
+/* PS2 button prompts */
+.keys { display: inline-flex; align-items: center; gap: 0.75em; font-family: var(--ps2); font-size: 11px; letter-spacing: 0.03em; color: #eadfcf; }
+.keys b { font-family: Verdana, Tahoma, sans-serif; font-weight: 400; font-size: 1.15em; }
+.key-x { color: #8ab8ff; }
+.key-o { color: #ff938c; }
+.key-t { color: #7fe0a8; }
+@keyframes press { 50% { opacity: 0.4; } }
+
+/* ----- Top bar ----- */
+.top { position: absolute; left: 0; right: 0; top: 0; z-index: 10; display: flex; justify-content: space-between; padding: 14px var(--gutter); }
+.top__right { display: flex; align-items: center; gap: 18px; }
+.top__link { appearance: none; background: none; border: 0; padding: 4px 0; cursor: pointer; font-size: 13.5px; color: #f3e4d0; text-decoration: none; text-shadow: 0 1px 3px rgba(30, 14, 5, 0.9); transition: color 0.2s ease; }
+.top__link:hover { color: #fff; }
+.top__sound[aria-pressed="false"] { opacity: 0.45; text-decoration: line-through; }
+
+/* ----- The room ----- */
+.room {
+  --sh: clamp(205px, 38vh, 400px); --sw: calc(var(--sh) * 0.0802); --tvw: clamp(320px, 38vw, calc(var(--sh) * 1.92));
+  --top: clamp(26px, 5vh, 42px); --edge: clamp(22px, 3.8vh, 32px); --stand: calc(var(--top) * 0.58);
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; min-height: 100svh; background: var(--night);
+}
+.room__wall { position: absolute; inset: 0; z-index: -3; background: url("images/parches/cuarto/pared.webp") center / cover; }
+.room__torch { position: absolute; left: 0; top: 0; z-index: -2; width: 720px; height: 720px; margin: -360px 0 0 -360px; pointer-events: none; background: radial-gradient(closest-side, rgba(255, 224, 182, 0.11), transparent); will-change: transform; }
+.room__dust { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; pointer-events: none; }
+.room__below {
+  position: relative; z-index: 1; height: clamp(58px, 10.5vh, 96px);
+  background:
+    linear-gradient(90deg, transparent calc(36% - 1px), rgba(10, 4, 1, 0.82) calc(36% - 1px) 36%, rgba(255, 226, 186, 0.1) 36% calc(36% + 1px), transparent calc(36% + 1px)),
+    linear-gradient(90deg, transparent calc(72% - 1px), rgba(10, 4, 1, 0.82) calc(72% - 1px) 72%, rgba(255, 226, 186, 0.1) 72% calc(72% + 1px), transparent calc(72% + 1px)),
+    linear-gradient(180deg, rgba(10, 4, 1, 0.82), rgba(10, 4, 1, 0.42) 34%, rgba(10, 4, 1, 0.52)),
+    url("images/parches/madera.webp") center / 100% 340%;
+}
+.knob { position: absolute; top: 40%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #d9c9ad, #6b5a44 62%, #2c2118); box-shadow: 1px 2px 2px rgba(10, 4, 1, 0.7); }
+.knob--a { left: calc(36% - 16px); }
+.knob--b { left: calc(36% + 8px); }
+
+/* Posters on the wall */
+.posters { position: absolute; left: clamp(20px, 7vw, 150px); top: clamp(44px, 7.5vh, 76px); z-index: 0; display: flex; align-items: flex-start; gap: clamp(14px, 2vw, 30px); --ph: min(36vh, calc(100svh - var(--sh) - 186px)); will-change: transform; }
+.poster { position: relative; height: var(--ph); margin: -12px -14px; filter: drop-shadow(3px 5px 3px rgba(30, 14, 5, 0.46)); animation: poster-in 0.6s ease 0.2s both; }
+@keyframes poster-in { from { opacity: 0; } }
+.poster img { width: auto; height: 100%; max-width: none; }
+.poster--a { transform: rotate(-1.4deg); }
+.poster--b { margin-top: 2px; transform: rotate(1deg); }
+
+/* ----- The furniture ----- */
+.unit { position: relative; z-index: 2; display: flex; align-items: flex-end; margin-top: auto; padding-right: clamp(10px, 2.4vw, 34px); will-change: transform; }
+.unit__games { position: relative; flex: 1; min-width: 0; }
+.shelf__row { position: relative; display: flex; justify-content: flex-end; }
+/* The hard shadow of the flash on the wall behind the games */
+.shelf__row::before { content: ""; position: absolute; left: -200px; right: -8px; top: 9px; bottom: 0; background: rgba(32, 15, 6, 0.6); filter: blur(5px); }
+/* Where things touch the wood */
+.shelf__row::after { content: ""; position: absolute; left: -200px; right: -3px; bottom: -9px; height: 12px; background: linear-gradient(180deg, rgba(14, 6, 2, 0.8), rgba(14, 6, 2, 0)); }
+.board { position: relative; z-index: 0; height: calc(var(--top) + var(--edge)); margin-top: calc(var(--stand) * -1); box-shadow: 0 18px 24px -6px rgba(14, 6, 2, 0.8); }
+.board::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--top); background: linear-gradient(180deg, rgba(20, 9, 3, 0.62), rgba(20, 9, 3, 0.16) 44%, rgba(255, 230, 192, 0.17)), url("images/parches/madera.webp") center / 100% 520%; }
+.board::after { content: ""; position: absolute; left: 0; right: 0; top: var(--top); bottom: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(30, 13, 4, 0.42)), url("images/parches/madera.webp") center / 100% 100%; box-shadow: inset 0 1px 0 rgba(255, 234, 200, 0.5), inset 0 2px 0 rgba(255, 234, 200, 0.08); }
+.board--upper { display: none; }
+
+/* Figures: nearer the camera than the wall, so their shadow lands further away */
+.fig { position: relative; pointer-events: none; }
+.fig img { display: block; width: auto; height: 100%; max-width: none; filter: drop-shadow(1px 1px 1px rgba(20, 9, 3, 0.4)) drop-shadow(13px 8px 8px rgba(30, 14, 5, 0.42)); }
+.fig--kos { flex: none; z-index: 2; height: calc(var(--sh) * 1.1); margin: 0 clamp(2px, 0.6vw, 10px) -3px -14px; }
+.fig--kos img { position: relative; }
+/* Her display base, on the wood */
+.fig__base { position: absolute; left: 50%; bottom: -8px; width: 60%; height: 17px; transform: translateX(-53%); border-radius: 50%; background: radial-gradient(ellipse at 42% 30%, #3a3531, #120e0b 66%); box-shadow: 0 4px 5px rgba(14, 6, 2, 0.75), inset 0 1px 0 rgba(255, 240, 220, 0.2); }
+.tvset { position: relative; flex: none; width: var(--tvw); }
+/* Standing on top of the TV, a little behind its front edge */
+.fig--top { position: absolute; left: 60%; bottom: calc(var(--tvw) * 0.705); z-index: 0; height: calc(var(--sh) * 0.62); }
+.fig--top img { filter: drop-shadow(10px 6px 6px rgba(30, 14, 5, 0.4)); }
+/* Lying on the front of the shelf, in front of the TV */
+.ps2 { position: absolute; left: -9%; bottom: calc(var(--stand) * -0.82); z-index: 3; width: 42%; pointer-events: none; }
+.ps2 img { width: 100%; height: auto; filter: drop-shadow(2px 2px 1px rgba(14, 6, 2, 0.7)); }
+.ps2::before { content: ""; position: absolute; left: 3%; right: 1%; bottom: -3%; height: 34%; border-radius: 50%; background: radial-gradient(closest-side, rgba(14, 6, 2, 0.72), transparent); }
+
+/* ----- The CRT ----- */
+.tv { position: relative; z-index: 1; aspect-ratio: 900 / 665; margin-bottom: 0; filter: drop-shadow(9px 7px 7px rgba(30, 14, 5, 0.5)); }
+.tv__body { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.tv__screen { position: absolute; left: 14.25%; right: 14.45%; top: 9.25%; bottom: 19.35%; overflow: hidden; background: #02030a; border-radius: 12px / 16px; }
+.tv__picture { position: absolute; inset: 0; transform-origin: 50% 50%; animation: crt-on 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.65s both; }
+/* Switching on: a white line that opens into the picture */
+@keyframes crt-on {
+  0% { opacity: 0; transform: scale(1, 0.004); filter: brightness(7); }
+  4% { opacity: 1; transform: scale(1, 0.004); filter: brightness(7); }
+  34% { transform: scale(1, 0.016); filter: brightness(5); }
+  62% { transform: scale(1, 1.05); filter: brightness(2.1); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+.tv__menu, .tv__shot, .tv__static { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tv__menu { display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12%; background: radial-gradient(ellipse at 50% 42%, #0a1a48, #02030c 72%); transition: opacity 0.08s linear; }
+.tv__ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tv__title {
+  position: relative; font-family: var(--ps2); font-weight: 400; font-size: calc(var(--tvw) * 0.038); letter-spacing: 0.02em; color: #f4f9ff; white-space: nowrap;
+  text-shadow: -1px 0 rgba(255, 70, 70, 0.55), 1px 0 rgba(70, 170, 255, 0.65), 0 0 10px #8cc0ff, 0 0 26px #2f7bff;
+}
+.tv__shot { object-fit: cover; opacity: 0; filter: saturate(1.2) contrast(1.06) brightness(1.08); }
+.tv[data-mode="game"] .tv__shot { opacity: 1; }
+.tv[data-mode="game"] .tv__menu { opacity: 0; }
+.tv__static { opacity: 0; image-rendering: pixelated; }
+.tv.is-static .tv__static { opacity: 1; }
+.tv__osd { position: absolute; left: 6%; top: 5%; font-family: var(--osd); font-size: calc(var(--tvw) * 0.05); line-height: 1; color: #66f6d8; text-shadow: 0 0 6px rgba(102, 246, 216, 0.85), 2px 2px 0 rgba(0, 0, 0, 0.7); }
+.tv__bar { position: absolute; left: 0; right: 0; top: -30%; height: 30%; background: linear-gradient(180deg, transparent, rgba(190, 220, 255, 0.075), transparent); animation: hum 7.5s linear infinite; }
+@keyframes hum { to { transform: translateY(440%); } }
+.tv__scan { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255, 255, 255, 0.13), transparent 26%), radial-gradient(ellipse at center, transparent 54%, rgba(0, 0, 0, 0.62) 100%), repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 3px); }
+/* The screen lights its own bezel and the wood in front of it */
+.tv__spill { position: absolute; left: 14.25%; right: 14.45%; top: 9.25%; bottom: 19.35%; border-radius: 12px / 16px; pointer-events: none; box-shadow: 0 0 calc(var(--tvw) * 0.05) calc(var(--tvw) * 0.012) rgba(96, 150, 255, 0.34), inset 0 0 0 1px rgba(10, 14, 30, 0.6); transition: opacity 0.22s ease; }
+.tv__reflect { position: absolute; left: 12%; right: 12%; bottom: calc(var(--stand) * -1); z-index: 2; height: var(--stand); pointer-events: none; background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(110, 160, 255, 0.34), transparent); }
+.tvset::after { content: ""; position: absolute; left: 7%; right: 6%; bottom: -7px; z-index: 0; height: 11px; background: radial-gradient(closest-side, rgba(14, 6, 2, 0.85), transparent); }
+/* The only cool light in the room */
+.tv__halo { position: absolute; left: -26%; right: -18%; top: -26%; bottom: -8%; z-index: -1; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(closest-side, rgba(96, 150, 255, 0.36), rgba(96, 150, 255, 0.1) 60%, transparent); transition: opacity 0.22s ease; }
+
+/* ----- Spines ----- */
+.spine { position: relative; flex: none; display: block; width: var(--sw); height: var(--sh); padding: 0; margin: 0; background: none; border: 0; animation: spine-in 0.7s cubic-bezier(0.2, 0.75, 0.25, 1) both; animation-delay: calc(var(--dist, 0) * 22ms + 0.25s); }
+@keyframes spine-in { from { opacity: 0; transform: translateY(16px); } }
+.spine::before { content: ""; position: absolute; inset: 0; background: #1a0e07; }
+.spine__body { position: absolute; inset: 0; display: block; transform-origin: 50% 100%; will-change: transform; }
+.spine__case { position: absolute; inset: 0; display: block; box-shadow: 0 4px 4px rgba(30, 14, 5, 0.5); transition: transform 0.26s cubic-bezier(0.2, 0.85, 0.3, 1), box-shadow 0.26s ease; }
+.spine__case img { width: 100%; height: 100%; object-fit: fill; filter: brightness(var(--b, 0.6)) saturate(0.9) sepia(0.05); }
+/* The rounded edge of a plastic case */
+.spine__case::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(20, 8, 2, 0.6), rgba(255, 244, 224, 0.16) 15%, rgba(255, 244, 224, 0.03) 42%, rgba(20, 8, 2, 0.1) 72%, rgba(20, 8, 2, 0.66)); }
+/* The last one leans on the figure */
+.spine.is-last .spine__case { transform: rotate(3.2deg); transform-origin: 100% 100%; }
+.spine.is-cut { display: none; }
+
+/* The game with patches sits a little forward and catches the light */
+.spine--on { cursor: pointer; z-index: 2; }
+.spine--on:focus-visible { outline: none; }
+.spine--on .spine__case { transform: translateY(-8px) scale(1.05); box-shadow: 0 9px 9px rgba(30, 14, 5, 0.55), 0 0 18px 2px rgba(150, 170, 255, 0.44); }
+.spine--on .spine__case img { filter: brightness(1.02) contrast(1.1) saturate(1.2); transition: filter 0.26s ease; }
+.spine__bloom { position: absolute; left: -70%; right: -70%; top: -3%; bottom: -2%; pointer-events: none; background-size: 100% 100%; filter: blur(16px) saturate(1.8); opacity: 0.6; animation: breathe 4.4s ease-in-out infinite; transition: opacity 0.3s ease; }
+@keyframes breathe { 50% { opacity: 0.4; } }
+/* A wider target for fingers and the mouse: the spine itself is thin */
+.spine--on .spine__case::before { content: ""; position: absolute; inset: 0 -10px; }
+
+.spine--on:hover .spine__case, .spine--on:focus-visible .spine__case { transform: translateY(-13px) scale(1.1); box-shadow: 0 15px 15px rgba(30, 14, 5, 0.55), 0 0 30px 6px rgba(160, 180, 255, 0.66); }
+.spine--on:hover .spine__case img, .spine--on:focus-visible .spine__case img { filter: brightness(1.12) contrast(1.1) saturate(1.25); }
+.spine--on:hover .spine__bloom, .spine--on:focus-visible .spine__bloom { opacity: 0.72; animation: none; }
+.spine:has(+ .spine--on:hover) .spine__case { transform: translateX(-4px); }
+.spine--on:hover + .spine .spine__case { transform: translateX(4px); }
+.spine.is-out .spine__body, .spine.is-out .spine__bloom { visibility: hidden; }
+
+/* The name on the edge of the shelf, with the console's LED, and the prompt below it */
+.spine__tag { position: absolute; left: 50%; top: calc(100% + var(--stand) + 7px); z-index: 3; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 2.8vh, 24px); white-space: nowrap; animation: tag-in 0.5s ease 1.1s both; }
+@keyframes tag-in { from { opacity: 0; } }
+.spine__name { display: inline-flex; align-items: center; gap: 0.75em; font-family: var(--ps2); font-size: clamp(10px, 1.5vh, 12px); letter-spacing: 0.03em; color: #fff; text-shadow: 0 1px 2px #120703, 0 0 8px rgba(18, 7, 3, 0.8); }
+.spine__tag .keys { color: #fff; animation: press 2.4s ease-in-out infinite; text-shadow: 0 1px 2px #120703, 0 0 8px rgba(18, 7, 3, 0.8); }
+.led { width: 5px; height: 5px; border-radius: 50%; background: #a8ceff; box-shadow: 0 0 6px 2px rgba(110, 165, 255, 0.95); animation: press 2.4s ease-in-out infinite; }
+@media (hover: none) { .spine__tag .keys { display: none; } }
+
+/* ----- The plain list ----- */
+.list { max-width: 820px; margin-inline: auto; padding: clamp(36px, 5vw, 58px) var(--gutter) clamp(24px, 4vw, 40px); opacity: 0; transform: translateY(14px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.list.is-in { opacity: 1; transform: none; }
+.list h2 { font-family: var(--ps2); font-weight: 400; font-size: 12px; letter-spacing: 0.06em; color: var(--dim); margin-bottom: 14px; }
+.game { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; align-items: center; padding: 16px 0; border-top: 1px solid rgba(246, 236, 220, 0.14); }
+.game__cover { appearance: none; padding: 0; background: #000; border: 0; cursor: pointer; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6); transition: transform 0.25s cubic-bezier(0.2, 0.85, 0.3, 1), box-shadow 0.25s ease; }
+.game__cover:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 0 18px rgba(255, 226, 180, 0.4); }
+.game__cover img { width: 100%; height: auto; }
+.game__name { font-weight: 500; font-size: 1.02rem; line-height: 1.25; margin-bottom: 4px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) 106px 158px; gap: 12px; align-items: baseline; padding: 6px 0; font-size: 14.5px; color: #e2d6c4; }
+.row__status { font-size: 12.5px; color: var(--dim); }
+.row__links { display: flex; gap: 14px; justify-content: flex-end; }
+.row__links a { text-underline-offset: 3px; text-decoration-color: rgba(246, 236, 220, 0.35); transition: color 0.15s ease; }
+.row__links a:hover { color: var(--amber); }
+.row__links a.is-main { color: var(--amber); }
+.foot { max-width: 820px; margin-inline: auto; padding: 16px var(--gutter) 32px; border-top: 1px solid rgba(246, 236, 220, 0.08); font-size: 12.5px; color: var(--dim); display: grid; gap: 2px; }
+.foot a { color: #dccfbc; text-underline-offset: 2px; }
+
+/* ----- The case ----- */
+.case {
+  --h: min(85vh, 690px, 61vw); --w: calc(var(--h) * 0.7105); --d: calc(var(--h) * 0.0802); --t: 0.9s;
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; overflow: hidden; color: var(--ink); background: transparent;
+}
+.case::backdrop { background: transparent; }
+/* The same room, with the lights turned down */
+.case__scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 90% at 50% 46%, rgba(44, 26, 14, 0.78), rgba(14, 7, 3, 0.93) 86%); opacity: 0; transition: opacity 0.45s ease; }
+.case.is-up .case__scrim { opacity: 1; }
+/* A little of the cover's colour on the wall behind it */
+.case__bloom { position: absolute; left: 50%; top: 50%; width: calc(var(--h) * 1.8); height: calc(var(--h) * 1.34); transform: translate(-50%, -50%); background-size: cover; background-position: center; filter: blur(80px) saturate(1.3); opacity: 0; transition: opacity 0.9s ease 0.2s; pointer-events: none; }
+.case.is-up .case__bloom { opacity: 0.34; }
+.case.is-open .case__bloom { opacity: 0.42; }
+/* Taking the picture */
+.case__flash { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: #fff6e6; }
+.case.is-open .case__flash { animation: flash 0.6s ease-out both; }
+@keyframes flash { 0% { opacity: 0.26; } 100% { opacity: 0; } }
+.case .ph-blacks { z-index: 5; }
+.case .ph-noise { z-index: 6; position: fixed; }
+.case .stamp { z-index: 7; position: fixed; animation: none; opacity: 0.92; }
+.case__stage { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1700px; }
+
+.fly, .tilt, .box { transform-style: preserve-3d; pointer-events: none; }
+.fly { position: relative; width: var(--w); height: var(--h); }
+.tilt { position: absolute; inset: 0; }
+.box { position: absolute; inset: 0; transition: transform var(--t) cubic-bezier(0.45, 0.05, 0.2, 1); }
+.box.is-open { transform: translate3d(calc((var(--w) + var(--d)) / 2), 0, calc(var(--d) / 2)); }
+.box.no-motion, .box.no-motion * { transition: none !important; }
+
+/* Right half: the tray with the discs */
+.tray {
+  position: absolute; inset: 0; transform: translateZ(calc(var(--d) / -2)); pointer-events: auto; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; border-radius: 0 3px 3px 0;
+  background: linear-gradient(115deg, rgba(255, 244, 224, 0.07), transparent 30%), repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.012) 0 2px, transparent 2px 5px), radial-gradient(ellipse at 40% 28%, #302a26, #100c0a 74%);
+  box-shadow: inset 0 0 0 2px #0a0705, inset 0 0 26px rgba(0, 0, 0, 0.85), 0 26px 44px rgba(10, 4, 1, 0.65);
+}
+.disc { position: relative; display: block; width: var(--size, calc(var(--w) * 0.63)); aspect-ratio: 1; border-radius: 50%; --a: 0deg; }
+.tray[data-n="1"] { --size: calc(var(--w) * 0.86); }
+.disc::before { content: ""; position: absolute; inset: 37%; border-radius: 50%; background: radial-gradient(circle, #5f5a56 0 30%, #14100e 32% 44%, #3a3532 46% 52%, #14100e 54%); }
+.disc img { position: relative; width: 100%; height: 100%; border-radius: 50%; filter: drop-shadow(0 4px 8px rgba(10, 4, 1, 0.75)); }
+/* Light moving over the disc with the pointer */
+.disc::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: 0.45;
+  background: conic-gradient(from var(--a), transparent 0deg 24deg, rgba(255, 248, 232, 0.55) 34deg, rgba(180, 220, 255, 0.3) 42deg, transparent 58deg 204deg, rgba(255, 248, 232, 0.5) 214deg, rgba(255, 210, 225, 0.28) 222deg, transparent 238deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 17%, #000 17.5%); mask: radial-gradient(circle, transparent 0 17%, #000 17.5%);
+}
+.box.is-open .disc img { animation: spin-down 2.8s cubic-bezier(0.1, 0.65, 0.2, 1) both; }
+.box.is-open .disc:nth-child(2) img { animation-duration: 3.3s; }
+.box.is-open .disc:hover img { animation: spin 2.2s linear infinite; }
+@keyframes spin-down { from { transform: rotate(-1080deg); } to { transform: rotate(0deg); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* The walls of the tray */
+.wall { position: absolute; background: linear-gradient(90deg, #0c0806, #25201c, #0c0806); }
+.wall--r { left: 100%; top: 0; width: var(--d); height: 100%; transform-origin: left center; transform: translateZ(calc(var(--d) / 2)) rotateY(90deg); }
+.wall--t { left: 0; top: calc(var(--d) * -1); width: 100%; height: var(--d); transform-origin: center bottom; transform: translateZ(calc(var(--d) / 2)) rotateX(90deg); }
+.wall--b { left: 0; top: 100%; width: 100%; height: var(--d); transform-origin: center top; transform: translateZ(calc(var(--d) / 2)) rotateX(-90deg); }
+
+/* The hinge is the spine; the lid hangs from it, so the case opens flat like a real one */
+.hinge {
+  position: absolute; left: 0; top: 0; width: var(--d); height: 100%; transform-style: preserve-3d; transform-origin: left center;
+  transform: translateZ(calc(var(--d) / -2)) rotateY(-90deg); transition: transform var(--t) cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+.box.is-open .hinge { transform: translateZ(calc(var(--d) / -2)) rotateY(-180deg); }
+.hinge__out, .hinge__in { position: absolute; inset: 0; backface-visibility: hidden; }
+.hinge__out { background: #000; }
+.hinge__out img { width: 100%; height: 100%; object-fit: fill; }
+.hinge__in { transform: rotateY(180deg); background: repeating-linear-gradient(90deg, #090605 0 3px, #1b1714 3px 5px, #110e0b 5px 8px); box-shadow: inset 6px 0 10px rgba(0, 0, 0, 0.8), inset -6px 0 10px rgba(0, 0, 0, 0.8); }
+
+.lid {
+  position: absolute; left: 100%; top: 0; width: var(--w); height: 100%; transform-style: preserve-3d; transform-origin: left center;
+  transform: rotateY(90deg); transition: transform var(--t) cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+.box.is-open .lid { transform: rotateY(0deg); }
+.lid__out, .lid__in { position: absolute; inset: 0; backface-visibility: hidden; pointer-events: auto; }
+.lid__out { background: #000; overflow: hidden; border-radius: 2px; box-shadow: 0 26px 44px rgba(10, 4, 1, 0.65); }
+.lid__out img { width: 100%; height: 100%; object-fit: cover; }
+.lid__out::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.08) 3%, rgba(255, 255, 255, 0) 11%), radial-gradient(ellipse 60% 34% at 62% 26%, rgba(255, 250, 238, 0.22), transparent 72%); }
+/* A light that crosses the plastic sleeve as the case turns */
+.sheen { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(105deg, transparent 40%, rgba(255, 250, 238, 0.5) 50%, transparent 60%) no-repeat; background-size: 280% 100%; background-position: 130% 0; }
+.fly.is-flying .sheen { animation: sweep 1.5s ease-out both; }
+@keyframes sweep { to { background-position: -40% 0; } }
+.lid__in { transform: rotateY(180deg); background: #100c0a; padding: 5px; box-shadow: 0 26px 44px rgba(10, 4, 1, 0.65); border-radius: 3px 0 0 3px; }
+.clip { position: absolute; right: 14%; width: 11%; height: 6px; background: linear-gradient(180deg, #2c2723, #0d0a08); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.6); border-radius: 0 0 2px 2px; }
+.clip--t { top: 3px; }
+.clip--b { bottom: 3px; transform: scaleY(-1); }
+
+/* ----- Left half: the game's title screen, with the patches as its menu ----- */
+.screen {
+  position: relative; height: 100%; overflow: hidden; display: flex; flex-direction: column; align-items: center; background: #e6e6f0; color: #1c1945;
+  font-size: clamp(10.5px, calc(var(--h) * 0.0232), 16px); box-shadow: inset 0 0 40px rgba(50, 50, 120, 0.25);
+}
+.screen__art { position: absolute; inset: 9% -5% -5%; background-size: cover; background-position: center; animation: attract 24s ease-in-out infinite alternate; }
+@keyframes attract { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.07) translate(-1.6%, 1%); } }
+.screen__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(240, 242, 255, 0.95) 0%, rgba(240, 242, 255, 0.72) 14%, rgba(240, 242, 255, 0.22) 30%, rgba(240, 242, 255, 0) 42%, rgba(240, 242, 255, 0) 58%, rgba(238, 240, 253, 0.88) 72%, rgba(238, 240, 253, 0.97) 100%); }
+.screen__veil::after { content: ""; position: absolute; inset: 0; background: rgba(70, 44, 26, 0.09); }
+.screen__logo { position: relative; width: 66%; margin-top: 3.5%; filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.95)); }
+.screen__logo img { width: 100%; height: auto; }
+
+.menu { position: relative; width: 100%; margin-top: auto; padding: 0 6% 5%; text-align: center; }
+.menu__item { position: relative; display: block; width: fit-content; margin-inline: auto; padding: 0.34em 0.5em; font-family: var(--rpg); font-weight: 600; font-size: 1.16em; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; color: #2c2868; opacity: 0.56; outline: none; transition: opacity 0.18s ease, text-shadow 0.18s ease; }
+.menu__item.is-on { opacity: 1; color: #15123f; text-shadow: 0 0 8px #fff, 0 0 20px rgba(120, 140, 255, 0.95); }
+.menu__item.is-on::before { content: ""; position: absolute; left: -16%; right: -16%; top: 6%; bottom: 6%; z-index: -1; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.98) 24% 76%, transparent); box-shadow: 0 0 22px rgba(130, 150, 255, 0.28); animation: bar 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+/* The menu cursor */
+.menu__item.is-on::after { content: ""; position: absolute; left: -0.55em; top: 50%; width: 0.5em; height: 0.5em; margin-top: -0.25em; background: linear-gradient(135deg, #bcd0ff, #3c55d8); box-shadow: 0 0 9px 1px rgba(90, 120, 255, 0.95); transform: rotate(45deg); animation: cursor 1.1s ease-in-out infinite; }
+@keyframes cursor { 50% { translate: -0.28em 0; } }
+@keyframes bar { from { transform: scaleX(0.2); opacity: 0; } }
+.menu__item:focus-visible { outline: 2px solid #4a55c8; outline-offset: -2px; }
+.menu__help { min-height: 1.4em; margin-top: 0.55em; font-size: 0.92em; line-height: 1.3; color: #3c3875; animation: help 0.3s ease both; }
+@keyframes help { from { opacity: 0; transform: translateY(3px); } }
+.menu__keys { display: flex; justify-content: center; gap: 1.9em; margin-top: 0.75em; }
+.key { display: inline-flex; align-items: center; gap: 0.6em; padding: 0.25em 0.2em; font-family: var(--ps2); font-size: 0.68em; letter-spacing: 0.02em; color: #1c1945; text-decoration: none; transition: text-shadow 0.15s ease; }
+.key b { font-family: Verdana, Tahoma, sans-serif; font-weight: 400; font-size: 1.25em; }
+.key .key-x { color: #2a5fd8; }
+.key .key-t { color: #12925a; }
+.key:hover { text-shadow: 0 0 10px rgba(110, 130, 255, 0.95); }
+
+.case__sheet { display: none; }
+.case__close { position: absolute; left: 50%; bottom: clamp(6px, 2.2vh, 18px); z-index: 7; transform: translateX(-50%); appearance: none; background: none; border: 0; padding: 6px 10px; cursor: pointer; opacity: 0; transition: opacity 0.3s ease 0.2s, color 0.2s ease; }
+.case.is-up .case__close { opacity: 1; }
+.case__close:hover { color: #fff; }
+
+/* ----- Phones: the TV gets its own shelf above the games, the menu goes below the case ----- */
+@media (max-width: 760px) {
+  .room { --sh: clamp(190px, 30vh, 280px); --tvw: min(64vw, 300px); }
+  .posters { position: relative; left: auto; top: auto; justify-content: center; margin-top: 48px; gap: 8px; --ph: clamp(104px, 19vh, 180px); }
+  .poster, .poster--b { margin: -5px -4px; }
+  .unit { display: grid; grid-template-columns: 1fr auto; align-items: end; padding-right: 0; margin-top: auto; }
+  .fig--kos { grid-column: 1; grid-row: 1; justify-self: center; height: calc(var(--tvw) * 0.78); margin: 0 0 -3px; }
+  .room { --top: 24px; --edge: 20px; }
+  .tvset { grid-column: 2; grid-row: 1; margin-right: 12px; }
+  .board--upper { display: block; grid-column: 1 / -1; grid-row: 2; --top: 18px; --edge: 14px; margin: -11px 0 12px; }
+  .unit__games { grid-column: 1 / -1; grid-row: 3; }
+  .shelf__row { justify-content: center; }
+  /* Xenosaga II stays centred: as many spines on each side */
+  .spine:nth-child(-n+13) { display: none; }
+  .spine.is-last .spine__case { transform: none; }
+  .fig--top, .ps2, .tv__reflect { display: none; }
+  .tv__title { font-size: 11px; }
+  .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0; }
+  .row__links { grid-column: 1 / -1; justify-content: flex-start; }
+  .game { grid-template-columns: 54px minmax(0, 1fr); gap: 14px; align-items: start; }
+
+  .case { --h: calc((100vw - 28px) / 1.525); overflow-y: auto; }
+  .case__scrim, .case__flash, .case .ph-blacks { position: fixed; }
+  .case__bloom { position: fixed; top: 24%; }
+  .case__stage { position: relative; inset: auto; height: calc(var(--h) + 86px); padding-top: 30px; }
+  .case__sheet { display: block; position: relative; margin: 0 14px 40px; opacity: 0; transform: translateY(14px); transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; }
+  .case.is-open .case__sheet { opacity: 1; transform: none; pointer-events: auto; }
+  .case__sheet .menu { margin: 0; padding: 14px 12px; color: var(--ink); font-size: 16px; background: linear-gradient(180deg, rgba(58, 44, 80, 0.72), rgba(20, 12, 20, 0.84)); box-shadow: inset 0 0 0 1px rgba(226, 214, 255, 0.3); border-radius: 3px; }
+  .case__sheet .menu__item { color: #f2eefc; font-size: 1em; }
+  .case__sheet .menu__item.is-on { color: #fff; text-shadow: 0 0 10px rgba(150, 170, 255, 0.95); }
+  .case__sheet .menu__item.is-on::before { background: linear-gradient(90deg, transparent, rgba(130, 145, 255, 0.36) 24% 76%, transparent); box-shadow: none; }
+  .case__sheet .menu__help { color: #d8d2ea; font-size: 14px; }
+  .case__sheet .key { color: #f2eefc; font-size: 12px; padding: 0.5em; }
+  .case__sheet .key .key-x { color: #8ab8ff; }
+  .case__sheet .key .key-t { color: #7fe0a8; }
+  .case__close { position: fixed; left: auto; right: 12px; top: 8px; bottom: auto; transform: none; }
+  .screen__logo { margin-top: 12%; }
+  .screen__veil { background: linear-gradient(180deg, rgba(240, 242, 255, 0.82), rgba(240, 242, 255, 0.4) 34%, rgba(240, 242, 255, 0) 60%); }
+}
+
+/* ----- Calm modes: reduced motion and ?static screenshots ----- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .list { opacity: 1; transform: none; }
+  .stamp { opacity: 0.92; }
+  .shutter { display: none; }
+}
+.static *, .static *::before, .static *::after { animation: none !important; transition: none !important; }
+.static .list { opacity: 1; transform: none; }
+.static .stamp { opacity: 0.92; }
+.static .shutter { display: none; }

@@ -16,11 +16,46 @@
   <link rel="icon" type="image/png" href="./images/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Michroma&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="gate.css" />
+  <script>
+    // The boot gate only shows on a first visit with no deep link (?gate forces it; ?static skips it).
+    (function () {
+      var q = new URLSearchParams(location.search), seen = null;
+      try { seen = sessionStorage.getItem("sb-gate"); } catch (e) { /* ignore */ }
+      if (q.has("gate") || (!q.has("static") && !location.hash && seen !== "1")) document.documentElement.classList.add("has-gate");
+    })();
+  </script>
 </head>
 
 <body class="is-loading">
+  <!-- ===== Boot gate: picks between the portfolio and the patches page (gate.css, gate.js) ===== -->
+  <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <canvas class="gate__stage" aria-hidden="true"></canvas>
+    <div class="gate__logo" aria-hidden="true">SB Computer Entertainment</div>
+    <p class="gate__title" id="gate-title" data-gate="title">Elegí a dónde entrar</p>
+    <div class="gate__menu">
+      <div class="gate__options">
+        <button class="gate__option is-selected" type="button" data-go="portfolio">
+          <span class="gate__name">Portfolio</span>
+        </button>
+        <button class="gate__option" type="button" data-go="patches">
+          <span class="gate__name" data-gate="patches">Parches y mods</span>
+        </button>
+      </div>
+    </div>
+    <div class="gate__legend">
+      <span aria-hidden="true"><b class="gate__key-x">✕</b><span data-gate="enter"></span></span>
+      <button class="gate__lang" type="button"><b class="gate__key-t" aria-hidden="true">△</b><span data-gate="lang"></span></button>
+    </div>
+    <div class="gate__reading" aria-hidden="true">
+      <img class="gate__disc gate__disc--portfolio" src="./images/parches/dvd.webp" alt="" width="420" height="420" />
+      <img class="gate__disc gate__disc--patches" src="./images/parches/xenosaga2/disco1.webp" alt="" width="281" height="281" />
+      <span data-gate="reading"></span>
+    </div>
+  </div>
+
   <a class="skip-link" href="#work" data-i18n="skip">Saltar al contenido</a>
 
   <!-- ===== Boot sequence ===== -->
@@ -59,6 +94,7 @@
       <a href="#tools" class="nav__link"><span class="mono">02</span><span data-i18n="navTools" data-scramble>Herramientas</span></a>
       <a href="#about" class="nav__link"><span class="mono">03</span><span data-i18n="navAbout" data-scramble>Sobre mí</span></a>
       <a href="#contact" class="nav__link"><span class="mono">04</span><span data-i18n="navContact" data-scramble>Contacto</span></a>
+      <a href="parches.html" class="nav__link"><span class="mono">05</span><span data-i18n="navPatches" data-scramble>Parches</span></a>
     </nav>
     <div class="header__actions">
       <button class="lang" type="button" aria-label="Cambiar idioma / Change language">
@@ -73,6 +109,7 @@
     <a href="#tools"><span class="mono">02</span><span data-i18n="navTools">Herramientas</span></a>
     <a href="#about"><span class="mono">03</span><span data-i18n="navAbout">Sobre mí</span></a>
     <a href="#contact"><span class="mono">04</span><span data-i18n="navContact">Contacto</span></a>
+    <a href="parches.html"><span class="mono">05</span><span data-i18n="navPatches">Parches</span></a>
   </div>
 
   <main id="top">
@@ -358,11 +395,13 @@
       <span class="mono">© <span class="year">2026</span> Santiago Batnoska</span>
       <span class="mono footer__clock"><span class="dot dot--live"></span>Buenos Aires — <span class="clock">--:--</span></span>
       <span class="mono" data-i18n="handmade">Diseñado y programado a mano</span>
+      <a href="index.html?gate" class="mono footer__top" data-magnetic><span data-i18n="changeDisc">Cambiar de disco</span> ◎</a>
       <a href="#top" class="mono footer__top" data-magnetic><span data-i18n="backTop">Volver arriba</span> ↑</a>
     </div>
     <div class="footer__giant" aria-hidden="true">BATNOSKA</div>
   </footer>
 
+  <script src="./gate.js"></script>
   <script src="./index.js"></script>
 </body>
 
